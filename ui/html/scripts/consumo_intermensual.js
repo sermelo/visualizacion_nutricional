@@ -14,8 +14,6 @@ function getUrl() {
 // Do API query to get the data 
 d3.json(getUrl()).then(showData)
 
-//d3.json("https://output.jsbin.com/hekavo/12.js").then(showData)
-
 function showData(data) {
     // Define the title
     d3.select('body').append('div').text(field + " de " + product + " en " + region + " en " + year)
