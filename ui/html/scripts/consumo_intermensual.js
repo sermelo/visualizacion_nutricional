@@ -14,6 +14,7 @@ function getUrl() {
 // Do API query to get the data 
 d3.json(getUrl()).then(showData)
 
+// Print graphs
 function showData(data) {
     // Define the title
     d3.select('body').append('div').text(field + " de " + product + " en " + region + " en " + year)
