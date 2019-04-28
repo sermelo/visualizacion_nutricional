@@ -5,10 +5,13 @@ var field = "Volumen (miles de kg)"
 
 // Prepare API query
 function getUrl() {
+ /* Commented because needs from a API server running in localhost
     var baseUrl = 'http://localhost:5000/test2'
     var filter = '{"Producto":"' + product + '","Región":"' + region + '","Año":"' + year + '"}'
     var projection = '{"' + field + '":1,"Mes":1,"Producto":0,"Categoría":0}'
     var dataUrl = encodeURI(baseUrl + '?max_results=300&where=' + filter + '&projection=' + projection);
+*/
+    var dataUrl = "data/aceituna_andalucia_2004.json"
     return dataUrl
 }
 // Do API query to get the data 
