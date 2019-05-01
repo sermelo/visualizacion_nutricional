@@ -38,8 +38,8 @@ function requestData(product, region, year, field, callback) {
  * @return the Http get Url with the query
  */
 function getUrl(product, region, year, field) {
-    var baseUrl = 'http://localhost:5000/test2'
-    var filter = '{"Producto":"' + product + '","Región":"' + region + '","Año":"' + year + '"}'
+    var baseUrl = 'http://localhost:5000/test3'
+    var filter = '{"Producto":"' + product + '","Región":"' + region + '","Año":' + year + '}'
     var projection = '{"' + field + '":1,"Mes":1,"Producto":0,"Categoría":0}'
     var dataUrl = encodeURI(baseUrl + '?max_results=300&where=' + filter + '&projection=' + projection);
     return dataUrl
