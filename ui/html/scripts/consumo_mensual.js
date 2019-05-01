@@ -1,6 +1,6 @@
 
 var fieldsMap = { "volume": "Volumen (miles de kg)"}
-var graphDiv = "polygon_graph"
+var graphDivId = "#polygon_graph"
 var field = ""
 
 /**
@@ -47,8 +47,10 @@ function getUrl(product, region, year, field) {
 
 // Print graphs
 function showData(data) {
+    var graphDiv = d3.select(graphDivId)
+
     // Define the title
-    d3.select('#polygon_graph').text(fieldsMap[field] + " de " + product + " en " + region + " en " + year)
+    graphDiv.text(fieldsMap[field] + " de " + product + " en " + region + " en " + year)
 	
     // Get only relevant data
     var monthsData = data._items
@@ -61,7 +63,7 @@ function showData(data) {
     var colorScale = d3.scaleLinear().domain(domain).range(["grey", "green"])
 
     // Print the data
-    var elementoUl = d3.select("body").append("ul")
+    var elementoUl = graphDiv.append("ul")
     elementoUl.selectAll("li")
               .data(monthsData)
 	      .enter()
