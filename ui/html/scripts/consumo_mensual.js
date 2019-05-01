@@ -13,7 +13,7 @@ var field = ""
  */
 function printGraph(product, region, year, fieldSortName) {
     field = fieldsMap[fieldSortName]
-    requestData(product, region, year, field, showData)
+    requestData(product, region, year, field, dataToGraph)
 }
 
 /**
@@ -45,8 +45,14 @@ function getUrl(product, region, year, field) {
     return dataUrl
 }
 
-// Print graphs
-function showData(data) {
+/**
+ * Take the data and draw a polygon graph in graphDivId div
+ * @param data Json format data to draw
+ *     The data should have an "_items" elements with the data
+ *     Each element in "_items" should contain at least the
+ *     "field"(see fieldsMap variable) and the "mes"(month)
+ */
+function dataToGraph(data) {
     var graphDiv = d3.select(graphDivId)
 
     // Define the title
