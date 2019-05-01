@@ -1,5 +1,6 @@
 
 var fieldsMap = { "volume": "Volumen (miles de kg)"}
+var graphDiv = "polygon_graph"
 
 /**
  * Request a product data
@@ -40,7 +41,7 @@ requestData(product, region, year, field, showData)
 // Print graphs
 function showData(data) {
     // Define the title
-    d3.select('body').append('div').text(fieldsMap[field] + " de " + product + " en " + region + " en " + year)
+    d3.select('#polygon_graph').text(fieldsMap[field] + " de " + product + " en " + region + " en " + year)
 	
     // Get only relevant data
     var monthsData = data._items
