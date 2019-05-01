@@ -1,6 +1,20 @@
 
 var fieldsMap = { "volume": "Volumen (miles de kg)"}
 var graphDiv = "polygon_graph"
+var field = ""
+
+/**
+ * Construct query Http call
+ * @param product The product to query
+ * @param region The region to query
+ * @param year The year to query
+ * @param fieldSortName the desired field to query
+ * @return the Http get Url with the query
+ */
+function printGraph(product, region, year, fieldSortName) {
+    field = fieldsMap[fieldSortName]
+    requestData(product, region, year, field, showData)
+}
 
 /**
  * Request a product data
@@ -30,13 +44,6 @@ function getUrl(product, region, year, field) {
     var dataUrl = encodeURI(baseUrl + '?max_results=300&where=' + filter + '&projection=' + projection);
     return dataUrl
 }
-
-var product = "Aceitunas"
-var region = "Andalucía"
-var year = "2004"
-var fieldToQuery = "volume"
-var field = fieldsMap[fieldToQuery]
-requestData(product, region, year, field, showData)
 
 // Print graphs
 function showData(data) {
