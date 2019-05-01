@@ -40,4 +40,23 @@ DOMAIN = {
             },
         }
     },
+    'test3': {
+        'schema': {
+            'Producto': {
+                'type': 'string'
+            },
+            'Categoría': {
+                'type': 'string'
+            },
+            "Volumen (miles de kg)" : {
+                "type": "float"
+            },
+            "Mes" : {
+                "type": "int"
+            },
+            "Año": {
+                "type": "int"
+            },
+        }
+    },
 }
