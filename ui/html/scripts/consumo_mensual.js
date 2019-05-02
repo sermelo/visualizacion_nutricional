@@ -56,25 +56,47 @@ function dataToGraph(data) {
     var graphDiv = d3.select(graphDivId)
 
     // Define the title
-    graphDiv.text(fieldsMap[field] + " de " + product + " en " + region + " en " + year)
-	
+    graphDiv.append("div").text(field + " de " + product + " en " + region + " en " + year)
+
+    // Define svg position and size
+    var margin = {top: 10, right: 30, bottom: 30, left: 60}
+    var width = 600 - margin.left - margin.right
+    var height = 400 - margin.top - margin.bottom
+
+    // Create svg
+    var svg = graphDiv
+              .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+                .attr("transform",
+                      "translate(" + margin.left + "," + margin.top + ")");
+
     // Get only relevant data
     var monthsData = data._items
 
-    // Define the values domain
-    var domain = d3.extent(monthsData, d => d[field])
+    var x = d3.scaleTime()
+       .domain([new Date(year, 0), new Date(year, 11)])
+       .range([0, width]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b")))
 
-    // Define font size and color scales
-    var fontSizeScale = d3.scaleLinear().domain(domain).range([12, 40])
-    var colorScale = d3.scaleLinear().domain(domain).range(["grey", "green"])
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain([0, d3.max(monthsData, d => d[field])])
+      .range([height, 0])
+    svg.append("g")
+      .call(d3.axisLeft(y))
 
-    // Print the data
-    var elementoUl = graphDiv.append("ul")
-    elementoUl.selectAll("li")
-              .data(monthsData)
-	      .enter()
-	      .append("li")
-	      .text(d => d.Mes)
-	      .style("font-size", d => fontSizeScale(d[field]))
-	      .style("color", d => colorScale(d[field]))
+    // Add the line
+    svg.append("path")
+      .datum(monthsData)
+      .attr("fill", "none")
+      .attr("stroke", "#69b3a2")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(new Date(year, d.Mes-1)) })
+        .y(function(d) { return y(d[field]) })
+        )
 }
