@@ -2,17 +2,23 @@
 var fieldsMap = { "volume": "Volumen (miles de kg)"}
 var graphDivId = "#polygon_graph"
 var field = ""
+var product = ""
+var region = ""
+var year = ""
 
 /**
  * Construct query Http call
- * @param product The product to query
- * @param region The region to query
- * @param year The year to query
+ * @param dataProduct The product to query
+ * @param dataRegion The region to query
+ * @param dataYear The year to query
  * @param fieldSortName the desired field to query
  * @return the Http get Url with the query
  */
-function printGraph(product, region, year, fieldSortName) {
+function printGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
     field = fieldsMap[fieldSortName]
+    product = dataProduct
+    region = dataRegion
+    year = dataYear
     requestData(product, region, year, field, dataToGraph)
 }
 
@@ -54,9 +60,6 @@ function getUrl(product, region, year, field) {
  */
 function dataToGraph(data) {
     var graphDiv = d3.select(graphDivId)
-
-    // Define the title
-    graphDiv.append("div").text(field + " de " + product + " en " + region + " en " + year)
 
     // Define svg position and size
     var margin = {top: 10, right: 30, bottom: 30, left: 60}
