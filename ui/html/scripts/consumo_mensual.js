@@ -11,6 +11,10 @@ var height = 300 - margin.top - margin.bottom
 var graphDiv = d3.select(graphDivId)
 var container, yAxisContainer, xAxisContainer
 
+var minYScale = 0
+var maxYScale = 0
+var paths = new Map();
+
 /**
  * Construct query Http call
  * @param dataProduct The product to query
@@ -52,7 +56,6 @@ function createEmptyGraph() {
         .append("g")
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")")
-    container.append("path")
     xAxisContainer = container.append("g")
       .attr("transform", "translate(0," + height + ")")
 
@@ -78,13 +81,28 @@ function getUrl(product, region, year, field) {
 }
 
 /**
- * Take the data and draw a polygon graph in graphDivId div
+ * Take the data and draw a polygon graph of a product if it doesn't exist
  * @param data Json format data to draw
  *     The data should have an "_items" elements with the data
  *     Each element in "_items" should contain at least the
  *     "field"(see fieldsMap variable) and the "mes"(month)
  */
 function dataToGraph(data) {
+    if (! paths.has(product)) {
+	newProductValues = new Map([["data", data], ["container", container.append("path")]])
+        paths.set(product, newProductValues)
+	addProductPath(paths.get(product))
+    }
+    rescaleProductsPaths()
+}
+
+/**
+ * Add a new product path
+ * @param data data to show
+ */
+function addProductPath(product) {
+    var productPath = product.get("container")
+    var data = product.get("data")
     // Get only relevant data
     var monthsData = data._items
 
@@ -96,16 +114,18 @@ function dataToGraph(data) {
        .duration(1000)
        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")))
 
+    if (maxYScale < d3.max(monthsData, d => d[field])) {
+        maxYScale = d3.max(monthsData, d => d[field])
+    }
 
     var yScale = d3.scaleLinear()
-      .domain([0, d3.max(monthsData, d => d[field])])
+      .domain([0, maxYScale])
       .range([height, 0])
     yAxisContainer
        .transition()
        .duration(1000)
        .call(d3.axisLeft(yScale))
-
-    container.select("path")
+    productPath
         .datum(monthsData)
         .transition()
         .duration(1000)
@@ -116,6 +136,18 @@ function dataToGraph(data) {
             .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
             .y(function(d) { return yScale(d[field]) })
             )
+}
+
+/**
+ * Rescale product to current scale
+ */
+function rescaleProductsPaths() {
+    console.log(paths)
+    paths.forEach(updateProductPath)
+}
+
+function updateProductPath(product, key, map) {
+    addProductPath(product)
 }
 
 /**
