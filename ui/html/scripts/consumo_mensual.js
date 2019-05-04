@@ -89,7 +89,7 @@ function getUrl(product, region, year, field) {
  */
 function dataToGraph(data) {
     if (! paths.has(product)) {
-	newProductValues = new Map([["data", data], ["container", container.append("path")]])
+	newProductValues = new Map([["data", data._items], ["container", container.append("path")]])
         paths.set(product, newProductValues)
 	addProductPath(paths.get(product))
     }
@@ -103,8 +103,6 @@ function dataToGraph(data) {
 function addProductPath(product) {
     var productPath = product.get("container")
     var data = product.get("data")
-    // Get only relevant data
-    var monthsData = data._items
 
     var xScale = d3.scaleTime()
        .domain([new Date(year, 0), new Date(year, 11)])
@@ -114,8 +112,8 @@ function addProductPath(product) {
        .duration(1000)
        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")))
 
-    if (maxYScale < d3.max(monthsData, d => d[field])) {
-        maxYScale = d3.max(monthsData, d => d[field])
+    if (maxYScale < d3.max(data, d => d[field])) {
+        maxYScale = d3.max(data, d => d[field])
     }
 
     var yScale = d3.scaleLinear()
@@ -126,7 +124,7 @@ function addProductPath(product) {
        .duration(1000)
        .call(d3.axisLeft(yScale))
     productPath
-        .datum(monthsData)
+        .datum(data)
         .transition()
         .duration(1000)
         .attr("fill", "none")
@@ -142,7 +140,6 @@ function addProductPath(product) {
  * Rescale product to current scale
  */
 function rescaleProductsPaths() {
-    console.log(paths)
     paths.forEach(addProductPath)
 }
 
@@ -159,6 +156,5 @@ function updateGraph(product, toDraw, region, year, fieldSortName) {
         printGraph(product, region, year, fieldSortName)
     }
 }
-
 
 createEmptyGraph()
