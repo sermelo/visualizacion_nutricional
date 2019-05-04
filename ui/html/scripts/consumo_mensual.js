@@ -112,13 +112,7 @@ function addProductPath(product) {
        .duration(1000)
        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")))
 
-    if (maxYScale < d3.max(data, d => d[field])) {
-        maxYScale = d3.max(data, d => d[field])
-    }
-
-    var yScale = d3.scaleLinear()
-      .domain([0, maxYScale])
-      .range([height, 0])
+    var yScale = getYScale()
     yAxisContainer
        .transition()
        .duration(1000)
@@ -155,6 +149,23 @@ function updateGraph(product, toDraw, region, year, fieldSortName) {
     if (toDraw == true) {
         printGraph(product, region, year, fieldSortName)
     }
+}
+
+/**
+ * Return the Y scale based in the current data
+ */
+function getYScale() {
+    var newMaxY = 0
+    paths.forEach(function(product) {
+        var data = product.get("data")
+        if (newMaxY < d3.max(data, d => d[field])) {
+            newMaxY = d3.max(data, d => d[field])
+        }
+    })
+    var yScale = d3.scaleLinear()
+      .domain([0, newMaxY])
+      .range([height, 0])
+    return yScale
 }
 
 createEmptyGraph()
