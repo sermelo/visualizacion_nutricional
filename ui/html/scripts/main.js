@@ -1,6 +1,7 @@
 PRODUCTS = [
     "Aceitunas",
     "Huevos kg",
+    "Frutos secos, nueces",
 ]
 
 
@@ -14,6 +15,7 @@ productOptions
     .append("select")
     .on('change', drawProduct)
     .attr("id", "products")
+    .attr("multiple", "multiple")
     .selectAll("option")
     .data(PRODUCTS)
     .enter()
@@ -24,8 +26,6 @@ productOptions
    .text(function(d){
         return d;
     })
-
-drawProduct()
 
 function drawProduct(){
     selectedProduct =
