@@ -98,23 +98,22 @@ function dataToGraph(data) {
     // Get only relevant data
     var monthsData = data._items
 
-    var xAxis = d3.scaleTime()
+    var xScale = d3.scaleTime()
        .domain([new Date(year, 0), new Date(year, 11)])
        .range([margin.left, width]);
-
     xAxisContainer
        .transition()
        .duration(2000)
-       .call(d3.axisBottom(xAxis).tickFormat(d3.timeFormat("%b")))
-    // Add Y axis
-    var yAxis = d3.scaleLinear()
+       .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")))
+
+
+    var yScale = d3.scaleLinear()
       .domain([0, d3.max(monthsData, d => d[field])])
       .range([height, 0])
-
     yAxisContainer
        .transition()
        .duration(2000)
-       .call(d3.axisLeft(yAxis))
+       .call(d3.axisLeft(yScale))
 
     container.append("path")
       .datum(monthsData)
@@ -122,8 +121,8 @@ function dataToGraph(data) {
       .attr("stroke", "#69b3a2")
       .attr("stroke-width", 1.5)
       .attr("d", d3.line()
-        .x(function(d) { return xAxis(new Date(year, d.Mes-1)) })
-        .y(function(d) { return yAxis(d[field]) })
+        .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
+        .y(function(d) { return yScale(d[field]) })
         )
     /*var join = container
             .selectAll("path")
@@ -132,8 +131,8 @@ function dataToGraph(data) {
         .transition()
         .duration(2000)
         .attr("d", d3.line()
-            .x(function(d) { return xAxis(new Date(year, d.Mes-1)) })
-            .y(function(d) { return yAxis(d[field]) })
+            .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
+            .y(function(d) { return yScale(d[field]) })
             )
 
     join
@@ -143,8 +142,8 @@ function dataToGraph(data) {
         .attr("stroke", "#69b3a2")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-            .x(function(d) { return xAxis(new Date(year, d.Mes-1)) })
-            .y(function(d) { return yAxis(d[field]) })
+            .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
+            .y(function(d) { return yScale(d[field]) })
             )*/
 
 }
