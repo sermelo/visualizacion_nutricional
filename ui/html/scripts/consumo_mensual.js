@@ -88,12 +88,9 @@ function getUrl(product, region, year, field) {
  *     "field"(see fieldsMap variable) and the "mes"(month)
  */
 function dataToGraph(data) {
-    if (! paths.has(product)) {
-	newProductValues = new Map([["data", data._items], ["container", container.append("path")]])
-        paths.set(product, newProductValues)
-	addProductPath(paths.get(product))
-    }
-    rescaleProductsPaths()
+    newProductValues = new Map([["data", data._items], ["container", container.append("path")], ["view", true]])
+    paths.set(product, newProductValues)
+    updateAllProducts()
 }
 
 /**
@@ -133,7 +130,7 @@ function addProductPath(product) {
 /**
  * Rescale product to current scale
  */
-function rescaleProductsPaths() {
+function updateAllProducts() {
     paths.forEach(addProductPath)
 }
 
