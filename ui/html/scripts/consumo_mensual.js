@@ -143,11 +143,7 @@ function addProductPath(product) {
  */
 function rescaleProductsPaths() {
     console.log(paths)
-    paths.forEach(updateProductPath)
-}
-
-function updateProductPath(product, key, map) {
-    addProductPath(product)
+    paths.forEach(addProductPath)
 }
 
 /**
@@ -163,5 +159,6 @@ function updateGraph(product, toDraw, region, year, fieldSortName) {
         printGraph(product, region, year, fieldSortName)
     }
 }
+
 
 createEmptyGraph()
