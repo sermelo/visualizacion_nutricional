@@ -25,7 +25,7 @@ productOptions
     .text(function(d){
         return d;
     })
-    .on("click", function(d){
-        updateGraph(this.value, this.selected, region, year, fieldSortName)
+    .on("dblclick", function(d){
+        updateGraph(this.value, region, year, fieldSortName)
     })
 

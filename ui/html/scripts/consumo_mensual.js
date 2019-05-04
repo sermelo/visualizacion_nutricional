@@ -18,26 +18,23 @@ var paths = new Map();
 /**
  * Construct query Http call
  * @param dataProduct The product to query
- * @param toDraw Ignore or draw the product
  * @param dataRegion The region to query
  * @param dataYear The year to query
  * @param fieldSortName the desired field to query
  */
-function updateGraph(dataProduct, toDraw, dataRegion, dataYear, fieldSortName) {
+function updateGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
     field = fieldsMap[fieldSortName]
     product = dataProduct
     region = dataRegion
     year = dataYear
-    if (toDraw == true) {
-        if (! paths.has(product)) {
-            console.log("Adding new product: " + product)
-            requestData(product, region, year, field, dataToGraph)
-        }
-        else if (! paths.get(product).get("view")) {
-            console.log("Activating an already requested product: " + product)
-            paths.get(product).set("view", true)
-            updateAllProducts()
-        }
+    if (! paths.has(product)) {
+        console.log("Adding new product: " + product)
+        requestData(product, region, year, field, dataToGraph)
+    }
+    else if (! paths.get(product).get("view")) {
+        console.log("Activating an already requested product: " + product)
+        paths.get(product).set("view", true)
+        updateAllProducts()
     }
     else {
         console.log("Deactivating a product: " + product)
