@@ -103,3 +103,9 @@ function dataToGraph(data) {
         .y(function(d) { return y(d[field]) })
         )
 }
+
+function updateGraph(product, toDraw, region, year, fieldSortName) {
+    if (toDraw == true) {
+        printGraph(product, region, year, fieldSortName)
+    }
+}

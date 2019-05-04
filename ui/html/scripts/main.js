@@ -13,7 +13,6 @@ var productOptions = d3.select("#productDropdown")
 
 productOptions
     .append("select")
-    .on('change', drawProduct)
     .attr("id", "products")
     .attr("multiple", "multiple")
     .selectAll("option")
@@ -23,13 +22,11 @@ productOptions
     .attr("value", function(d){
         return d;
     })
-   .text(function(d){
+    .text(function(d){
         return d;
     })
-
-function drawProduct(){
-    selectedProduct =
-	productOptions.select("select").property("value")
-    printGraph(selectedProduct, region, year, field)
+    .on("click", function(d){
+        updateGraph(this.value, this.selected, region, year, field)
+    })
 }
 
