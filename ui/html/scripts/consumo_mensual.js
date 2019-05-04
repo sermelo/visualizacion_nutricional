@@ -70,11 +70,17 @@ function createEmptyGraph() {
  * @return the Http get Url with the query
  */
 function getUrl(product, region, year, field) {
-    var baseUrl = 'http://localhost:5000/test3'
+/*    var baseUrl = 'http://localhost:5000/test3'
     var filter = '{"Producto":"' + product + '","Región":"' + region + '","Año":' + year + '}'
     var projection = '{"' + field + '":1,"Mes":1,"Producto":0,"Categoría":0}'
-    var dataUrl = encodeURI(baseUrl + '?max_results=300&where=' + filter + '&projection=' + projection);
-    return dataUrl
+    var dataUrl = encodeURI(baseUrl + '?max_results=300&where=' + filter + '&projection=' + projection);*/
+    var baseUrl = "data/"
+    offlineDataMap = {
+        "Aceitunas": "aceitunas.json",
+        "Huevos kg": "huevos.json",
+        "Frutos secos, nueces": "frutos_secos.json",
+    }
+    return baseUrl + offlineDataMap[product]
 }
 
 /**
