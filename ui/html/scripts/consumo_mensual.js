@@ -28,7 +28,13 @@ function printGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
     product = dataProduct
     region = dataRegion
     year = dataYear
-    requestData(product, region, year, field, dataToGraph)
+    if (! paths.has(product)) {
+        requestData(product, region, year, field, dataToGraph)
+    }
+    else if (! paths.get(product).get("view")) {
+        paths.get(product).set("view", true)
+        updateAllProducts()
+    }
 }
 
 /**
