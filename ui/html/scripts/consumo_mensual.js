@@ -15,9 +15,9 @@ var margin = {
     bottom: 20,
 }
 
-var margin = {top: 10, right: 50, bottom: 30, left: 60}
-var width = 1000 - margin.left - margin.right
-var height = 400 - margin.top - margin.bottom
+var margin = {top: 0, right: 10, bottom: 30, left: 100}
+var width = 800 - margin.left - margin.right
+var height = 300 - margin.top - margin.bottom
 var graphDiv = d3.select(graphDivId)
 var container, yAxisContainer, xAxisContainer
 
