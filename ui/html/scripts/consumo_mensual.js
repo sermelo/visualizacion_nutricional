@@ -1,19 +1,9 @@
-
 var fieldsMap = { "volume": "Volumen (miles de kg)"}
 var graphDivId = "#polygon_graph"
 var field = ""
 var product = ""
 var region = ""
 var year = ""
-
-var width = 350
-var height = 350
-var margin = {
-    left: 50,
-    right: 35,
-    top: 40,
-    bottom: 20,
-}
 
 var margin = {top: 0, right: 10, bottom: 30, left: 100}
 var width = 800 - margin.left - margin.right
@@ -62,7 +52,7 @@ function createEmptyGraph() {
         .append("g")
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")")
-
+    container.append("path")
     xAxisContainer = container.append("g")
       .attr("transform", "translate(0," + height + ")")
 
@@ -103,7 +93,7 @@ function dataToGraph(data) {
        .range([margin.left, width]);
     xAxisContainer
        .transition()
-       .duration(2000)
+       .duration(1000)
        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")))
 
 
@@ -112,42 +102,30 @@ function dataToGraph(data) {
       .range([height, 0])
     yAxisContainer
        .transition()
-       .duration(2000)
+       .duration(1000)
        .call(d3.axisLeft(yScale))
 
-    container.append("path")
-      .datum(monthsData)
-      .attr("fill", "none")
-      .attr("stroke", "#69b3a2")
-      .attr("stroke-width", 1.5)
-      .attr("d", d3.line()
-        .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
-        .y(function(d) { return yScale(d[field]) })
-        )
-    /*var join = container
-            .selectAll("path")
-            .data(monthsData)
-    join
+    container.select("path")
+        .datum(monthsData)
         .transition()
-        .duration(2000)
-        .attr("d", d3.line()
-            .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
-            .y(function(d) { return yScale(d[field]) })
-            )
-
-    join
-        .enter()
-        .append("path")
+        .duration(1000)
         .attr("fill", "none")
         .attr("stroke", "#69b3a2")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
             .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
             .y(function(d) { return yScale(d[field]) })
-            )*/
-
+            )
 }
 
+/**
+ * Upgrade the graph
+ * @param product The product to query
+ * @param toDraw Ignore or draw the product
+ * @param region The region to query
+ * @param year The year to query
+ * @param fieldSortName the desired field to query
+ */
 function updateGraph(product, toDraw, region, year, fieldSortName) {
     if (toDraw == true) {
         printGraph(product, region, year, fieldSortName)
