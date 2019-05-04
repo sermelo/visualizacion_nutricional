@@ -18,21 +18,30 @@ var paths = new Map();
 /**
  * Construct query Http call
  * @param dataProduct The product to query
+ * @param toDraw Ignore or draw the product
  * @param dataRegion The region to query
  * @param dataYear The year to query
  * @param fieldSortName the desired field to query
- * @return the Http get Url with the query
  */
-function printGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
+function updateGraph(dataProduct, toDraw, dataRegion, dataYear, fieldSortName) {
     field = fieldsMap[fieldSortName]
     product = dataProduct
     region = dataRegion
     year = dataYear
-    if (! paths.has(product)) {
-        requestData(product, region, year, field, dataToGraph)
+    if (toDraw == true) {
+        if (! paths.has(product)) {
+            console.log("Adding new product: " + product)
+            requestData(product, region, year, field, dataToGraph)
+        }
+        else if (! paths.get(product).get("view")) {
+            console.log("Activating an already requested product: " + product)
+            paths.get(product).set("view", true)
+            updateAllProducts()
+        }
     }
-    else if (! paths.get(product).get("view")) {
-        paths.get(product).set("view", true)
+    else {
+        console.log("Deactivating a product: " + product)
+        paths.get(product).set("view", false)
         updateAllProducts()
     }
 }
@@ -129,8 +138,15 @@ function addProductPath(product) {
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
             .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
-            .y(function(d) { return yScale(d[field]) })
-            )
+            .y(function(d) {
+                if (product.get("view")) {
+                    yValue = d[field]
+                } else {
+                    yValue = 0
+                }
+                return yScale(yValue)
+            })
+        )
 }
 
 /**
@@ -141,27 +157,13 @@ function updateAllProducts() {
 }
 
 /**
- * Upgrade the graph
- * @param product The product to query
- * @param toDraw Ignore or draw the product
- * @param region The region to query
- * @param year The year to query
- * @param fieldSortName the desired field to query
- */
-function updateGraph(product, toDraw, region, year, fieldSortName) {
-    if (toDraw == true) {
-        printGraph(product, region, year, fieldSortName)
-    }
-}
-
-/**
  * Return the Y scale based in the current data
  */
 function getYScale() {
     var newMaxY = 0
     paths.forEach(function(product) {
         var data = product.get("data")
-        if (newMaxY < d3.max(data, d => d[field])) {
+        if (product.get("view") && newMaxY < d3.max(data, d => d[field])) {
             newMaxY = d3.max(data, d => d[field])
         }
     })
