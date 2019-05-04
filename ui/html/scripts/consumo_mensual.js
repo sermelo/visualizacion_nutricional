@@ -6,6 +6,21 @@ var product = ""
 var region = ""
 var year = ""
 
+var width = 350
+var height = 350
+var margin = {
+    left: 50,
+    right: 35,
+    top: 40,
+    bottom: 20,
+}
+
+var margin = {top: 10, right: 50, bottom: 30, left: 60}
+var width = 1000 - margin.left - margin.right
+var height = 400 - margin.top - margin.bottom
+var graphDiv = d3.select(graphDivId)
+var container, yAxisContainer, xAxisContainer
+
 /**
  * Construct query Http call
  * @param dataProduct The product to query
@@ -31,8 +46,29 @@ function printGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
  * @param callback method to execute with the data
  */
 function requestData(product, region, year, field, callback) {
-  var url = getUrl(product, region, year, field)
-  d3.json(url).then(callback)
+    var url = getUrl(product, region, year, field)
+    d3.json(url).then(callback)
+}
+
+/**
+ * Create empty graph
+ */
+function createEmptyGraph() {
+    container =
+        d3.select(graphDivId)
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")")
+
+    xAxisContainer = container.append("g")
+      .attr("transform", "translate(0," + height + ")")
+
+    yAxisContainer = container
+        .append("g")
+        .attr("transform", "translate(" + (margin.left) + ", 0)")
 }
 
 /**
@@ -59,49 +95,58 @@ function getUrl(product, region, year, field) {
  *     "field"(see fieldsMap variable) and the "mes"(month)
  */
 function dataToGraph(data) {
-    var graphDiv = d3.select(graphDivId)
-
-    // Define svg position and size
-    var margin = {top: 10, right: 30, bottom: 30, left: 60}
-    var width = 600 - margin.left - margin.right
-    var height = 400 - margin.top - margin.bottom
-
-    // Create svg
-    var svg = graphDiv
-              .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-              .append("g")
-                .attr("transform",
-                      "translate(" + margin.left + "," + margin.top + ")");
-
     // Get only relevant data
     var monthsData = data._items
 
-    var x = d3.scaleTime()
+    var xAxis = d3.scaleTime()
        .domain([new Date(year, 0), new Date(year, 11)])
-       .range([0, width]);
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b")))
+       .range([margin.left, width]);
 
+    xAxisContainer
+       .transition()
+       .duration(2000)
+       .call(d3.axisBottom(xAxis).tickFormat(d3.timeFormat("%b")))
     // Add Y axis
-    var y = d3.scaleLinear()
+    var yAxis = d3.scaleLinear()
       .domain([0, d3.max(monthsData, d => d[field])])
       .range([height, 0])
-    svg.append("g")
-      .call(d3.axisLeft(y))
 
-    // Add the line
-    svg.append("path")
+    yAxisContainer
+       .transition()
+       .duration(2000)
+       .call(d3.axisLeft(yAxis))
+
+    container.append("path")
       .datum(monthsData)
       .attr("fill", "none")
       .attr("stroke", "#69b3a2")
       .attr("stroke-width", 1.5)
       .attr("d", d3.line()
-        .x(function(d) { return x(new Date(year, d.Mes-1)) })
-        .y(function(d) { return y(d[field]) })
+        .x(function(d) { return xAxis(new Date(year, d.Mes-1)) })
+        .y(function(d) { return yAxis(d[field]) })
         )
+    /*var join = container
+            .selectAll("path")
+            .data(monthsData)
+    join
+        .transition()
+        .duration(2000)
+        .attr("d", d3.line()
+            .x(function(d) { return xAxis(new Date(year, d.Mes-1)) })
+            .y(function(d) { return yAxis(d[field]) })
+            )
+
+    join
+        .enter()
+        .append("path")
+        .attr("fill", "none")
+        .attr("stroke", "#69b3a2")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+            .x(function(d) { return xAxis(new Date(year, d.Mes-1)) })
+            .y(function(d) { return yAxis(d[field]) })
+            )*/
+
 }
 
 function updateGraph(product, toDraw, region, year, fieldSortName) {
@@ -109,3 +154,5 @@ function updateGraph(product, toDraw, region, year, fieldSortName) {
         printGraph(product, region, year, fieldSortName)
     }
 }
+
+createEmptyGraph()

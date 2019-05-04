@@ -7,7 +7,7 @@ PRODUCTS = [
 
 var region = "Andalucía"
 var year = "2004"
-var field = "volume"
+var fieldSortName = "volume"
 
 var productOptions = d3.select("#productDropdown")
 
@@ -26,7 +26,6 @@ productOptions
         return d;
     })
     .on("click", function(d){
-        updateGraph(this.value, this.selected, region, year, field)
+        updateGraph(this.value, this.selected, region, year, fieldSortName)
     })
-}
 
