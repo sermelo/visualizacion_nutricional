@@ -1,18 +1,29 @@
-
 var fieldsMap = { "volume": "Volumen (miles de kg)"}
 var graphDivId = "#polygon_graph"
 var field = ""
+var product = ""
+var region = ""
+var year = ""
+
+var margin = {top: 0, right: 10, bottom: 30, left: 100}
+var width = 800 - margin.left - margin.right
+var height = 300 - margin.top - margin.bottom
+var graphDiv = d3.select(graphDivId)
+var container, yAxisContainer, xAxisContainer
 
 /**
  * Construct query Http call
- * @param product The product to query
- * @param region The region to query
- * @param year The year to query
+ * @param dataProduct The product to query
+ * @param dataRegion The region to query
+ * @param dataYear The year to query
  * @param fieldSortName the desired field to query
  * @return the Http get Url with the query
  */
-function printGraph(product, region, year, fieldSortName) {
+function printGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
     field = fieldsMap[fieldSortName]
+    product = dataProduct
+    region = dataRegion
+    year = dataYear
     requestData(product, region, year, field, dataToGraph)
 }
 
@@ -25,8 +36,29 @@ function printGraph(product, region, year, fieldSortName) {
  * @param callback method to execute with the data
  */
 function requestData(product, region, year, field, callback) {
-  var url = getUrl(product, region, year, field)
-  d3.json(url).then(callback)
+    var url = getUrl(product, region, year, field)
+    d3.json(url).then(callback)
+}
+
+/**
+ * Create empty graph
+ */
+function createEmptyGraph() {
+    container =
+        d3.select(graphDivId)
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")")
+    container.append("path")
+    xAxisContainer = container.append("g")
+      .attr("transform", "translate(0," + height + ")")
+
+    yAxisContainer = container
+        .append("g")
+        .attr("transform", "translate(" + (margin.left) + ", 0)")
 }
 
 /**
@@ -53,50 +85,51 @@ function getUrl(product, region, year, field) {
  *     "field"(see fieldsMap variable) and the "mes"(month)
  */
 function dataToGraph(data) {
-    var graphDiv = d3.select(graphDivId)
-
-    // Define the title
-    graphDiv.append("div").text(field + " de " + product + " en " + region + " en " + year)
-
-    // Define svg position and size
-    var margin = {top: 10, right: 30, bottom: 30, left: 60}
-    var width = 600 - margin.left - margin.right
-    var height = 400 - margin.top - margin.bottom
-
-    // Create svg
-    var svg = graphDiv
-              .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-              .append("g")
-                .attr("transform",
-                      "translate(" + margin.left + "," + margin.top + ")");
-
     // Get only relevant data
     var monthsData = data._items
 
-    var x = d3.scaleTime()
+    var xScale = d3.scaleTime()
        .domain([new Date(year, 0), new Date(year, 11)])
-       .range([0, width]);
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b")))
+       .range([margin.left, width]);
+    xAxisContainer
+       .transition()
+       .duration(1000)
+       .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")))
 
-    // Add Y axis
-    var y = d3.scaleLinear()
+
+    var yScale = d3.scaleLinear()
       .domain([0, d3.max(monthsData, d => d[field])])
       .range([height, 0])
-    svg.append("g")
-      .call(d3.axisLeft(y))
+    yAxisContainer
+       .transition()
+       .duration(1000)
+       .call(d3.axisLeft(yScale))
 
-    // Add the line
-    svg.append("path")
-      .datum(monthsData)
-      .attr("fill", "none")
-      .attr("stroke", "#69b3a2")
-      .attr("stroke-width", 1.5)
-      .attr("d", d3.line()
-        .x(function(d) { return x(new Date(year, d.Mes-1)) })
-        .y(function(d) { return y(d[field]) })
-        )
+    container.select("path")
+        .datum(monthsData)
+        .transition()
+        .duration(1000)
+        .attr("fill", "none")
+        .attr("stroke", "#69b3a2")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+            .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
+            .y(function(d) { return yScale(d[field]) })
+            )
 }
+
+/**
+ * Upgrade the graph
+ * @param product The product to query
+ * @param toDraw Ignore or draw the product
+ * @param region The region to query
+ * @param year The year to query
+ * @param fieldSortName the desired field to query
+ */
+function updateGraph(product, toDraw, region, year, fieldSortName) {
+    if (toDraw == true) {
+        printGraph(product, region, year, fieldSortName)
+    }
+}
+
+createEmptyGraph()
