@@ -11,20 +11,36 @@ var height = 300 - margin.top - margin.bottom
 var graphDiv = d3.select(graphDivId)
 var container, yAxisContainer, xAxisContainer
 
+var minYScale = 0
+var maxYScale = 0
+var paths = new Map();
+
 /**
  * Construct query Http call
  * @param dataProduct The product to query
  * @param dataRegion The region to query
  * @param dataYear The year to query
  * @param fieldSortName the desired field to query
- * @return the Http get Url with the query
  */
-function printGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
+function updateGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
     field = fieldsMap[fieldSortName]
     product = dataProduct
     region = dataRegion
     year = dataYear
-    requestData(product, region, year, field, dataToGraph)
+    if (! paths.has(product)) {
+        console.log("Adding new product: " + product)
+        requestData(product, region, year, field, dataToGraph)
+    }
+    else if (! paths.get(product).get("view")) {
+        console.log("Activating an already requested product: " + product)
+        paths.get(product).set("view", true)
+        updateAllProducts()
+    }
+    else {
+        console.log("Deactivating a product: " + product)
+        paths.get(product).set("view", false)
+        updateAllProducts()
+    }
 }
 
 /**
@@ -52,7 +68,6 @@ function createEmptyGraph() {
         .append("g")
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")")
-    container.append("path")
     xAxisContainer = container.append("g")
       .attr("transform", "translate(0," + height + ")")
 
@@ -78,15 +93,25 @@ function getUrl(product, region, year, field) {
 }
 
 /**
- * Take the data and draw a polygon graph in graphDivId div
+ * Take the data and draw a polygon graph of a product if it doesn't exist
  * @param data Json format data to draw
  *     The data should have an "_items" elements with the data
  *     Each element in "_items" should contain at least the
  *     "field"(see fieldsMap variable) and the "mes"(month)
  */
 function dataToGraph(data) {
-    // Get only relevant data
-    var monthsData = data._items
+    newProductValues = new Map([["data", data._items], ["container", container.append("path")], ["view", true]])
+    paths.set(product, newProductValues)
+    updateAllProducts()
+}
+
+/**
+ * Add a new product path
+ * @param data data to show
+ */
+function addProductPath(product) {
+    var productPath = product.get("container")
+    var data = product.get("data")
 
     var xScale = d3.scaleTime()
        .domain([new Date(year, 0), new Date(year, 11)])
@@ -96,17 +121,13 @@ function dataToGraph(data) {
        .duration(1000)
        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")))
 
-
-    var yScale = d3.scaleLinear()
-      .domain([0, d3.max(monthsData, d => d[field])])
-      .range([height, 0])
+    var yScale = getYScale()
     yAxisContainer
        .transition()
        .duration(1000)
        .call(d3.axisLeft(yScale))
-
-    container.select("path")
-        .datum(monthsData)
+    productPath
+        .datum(data)
         .transition()
         .duration(1000)
         .attr("fill", "none")
@@ -114,22 +135,39 @@ function dataToGraph(data) {
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
             .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
-            .y(function(d) { return yScale(d[field]) })
-            )
+            .y(function(d) {
+                if (product.get("view")) {
+                    yValue = d[field]
+                } else {
+                    yValue = 0
+                }
+                return yScale(yValue)
+            })
+        )
 }
 
 /**
- * Upgrade the graph
- * @param product The product to query
- * @param toDraw Ignore or draw the product
- * @param region The region to query
- * @param year The year to query
- * @param fieldSortName the desired field to query
+ * Rescale product to current scale
  */
-function updateGraph(product, toDraw, region, year, fieldSortName) {
-    if (toDraw == true) {
-        printGraph(product, region, year, fieldSortName)
-    }
+function updateAllProducts() {
+    paths.forEach(addProductPath)
+}
+
+/**
+ * Return the Y scale based in the current data
+ */
+function getYScale() {
+    var newMaxY = 0
+    paths.forEach(function(product) {
+        var data = product.get("data")
+        if (product.get("view") && newMaxY < d3.max(data, d => d[field])) {
+            newMaxY = d3.max(data, d => d[field])
+        }
+    })
+    var yScale = d3.scaleLinear()
+      .domain([0, newMaxY])
+      .range([height, 0])
+    return yScale
 }
 
 createEmptyGraph()
