@@ -29,7 +29,7 @@ function updateGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
     year = dataYear
     if (! paths.has(product)) {
         console.log("Adding new product: " + product)
-        requestData(product, region, year, field, dataToGraph)
+        requestProductData(product, region, year, field, dataToGraph)
     }
     else if (! paths.get(product).get("view")) {
         console.log("Activating an already requested product: " + product)

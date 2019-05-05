@@ -6,7 +6,7 @@
  * @param field the desired field to query
  * @param callback method to execute with the data
  */
-function requestData(product, region, year, field, callback) {
+function requestProductData(product, region, year, field, callback) {
     var url = getUrl(product, region, year, field)
     d3.json(url).then(callback)
 }
