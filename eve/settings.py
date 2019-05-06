@@ -59,4 +59,14 @@ DOMAIN = {
             },
         }
     },
+    "getuniqueyears" :{
+        'datasource': {
+            'source': 'test3',
+            'aggregation' : {
+                'pipeline': [
+                    {"$group" : {"_id":"$Año", "count" : {"$sum" : 1}}}
+                ]
+            }
+        }
+    }
 }
