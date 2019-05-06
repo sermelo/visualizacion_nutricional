@@ -13,7 +13,7 @@ var container, yAxisContainer, xAxisContainer
 
 var minYScale = 0
 var maxYScale = 0
-var paths = new Map();
+var productsData = new Map();
 
 /**
  * Construct query Http call
@@ -27,31 +27,31 @@ function updateGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
     product = dataProduct
     region = dataRegion
     year = dataYear
-    if (! paths.has(product)) {
+    if (! productsData.has(product)) {
         console.log("Adding new product: " + product)
         requestProductData(product, region, year, field, dataToGraph)
     }
-    else if (! paths.get(product).get("view")) {
+    else if (! productsData.get(product).get("view")) {
         console.log("Activating an already requested product: " + product)
-        paths.get(product).set("view", true)
+        productsData.get(product).set("view", true)
         updateAllProducts()
     }
     else {
         console.log("Deactivating a product: " + product)
-        paths.get(product).set("view", false)
+        productsData.get(product).set("view", false)
         updateAllProducts()
     }
 }
 
 function changeYear() {
-    selectedYear = d3.select("#dateList").select('select').property('value')
-    console.log("Change year:" + selectedYear)
+    year = d3.select("#dateList").select('select').property('value')
+    console.log("Change year:" + year)
 }
 
 /**
- * Create empty graph
+ * Create basic structure fot the graph
  */
-function createEmptyGraph() {
+function createBasicStructure() {
     container =
         d3.select(graphDivId)
         .append("svg")
@@ -77,7 +77,7 @@ function createEmptyGraph() {
  */
 function dataToGraph(data) {
     newProductValues = new Map([["data", data._items], ["container", container.append("path")], ["view", true]])
-    paths.set(product, newProductValues)
+    productsData.set(product, newProductValues)
     updateAllProducts()
 }
 
@@ -126,7 +126,7 @@ function addProductPath(product) {
  * Rescale product to current scale
  */
 function updateAllProducts() {
-    paths.forEach(addProductPath)
+    productsData.forEach(addProductPath)
 }
 
 /**
@@ -134,7 +134,7 @@ function updateAllProducts() {
  */
 function getYScale() {
     var newMaxY = 0
-    paths.forEach(function(product) {
+    productsData.forEach(function(product) {
         var data = product.get("data")
         if (product.get("view") && newMaxY < d3.max(data, d => d[field])) {
             newMaxY = d3.max(data, d => d[field])
@@ -146,4 +146,4 @@ function getYScale() {
     return yScale
 }
 
-createEmptyGraph()
+createBasicStructure()
