@@ -29,3 +29,22 @@ productOptions
         updateGraph(this.value, region, year, fieldSortName)
     })
 
+
+getUniqYears(printYears)
+
+function printYears(data) {
+    var years = data._items
+    yearsOptions = d3.select("#dateList").append("select").attr("id", "years")
+    yearsOptions
+        .selectAll("option")
+        .data(years)
+        .enter()
+        .append("option")
+        .attr("value", function(d){
+            return d._id;
+        })
+        .text(function(d){
+            return d._id;
+        })
+    yearsOptions.append("option").attr("value", "interannual").text("interannual")
+}

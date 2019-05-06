@@ -14,6 +14,10 @@ function requestProductData(product, region, year, field, callback) {
     d3.json(url).then(callback)
 }
 
+function getUniqYears(callback) {
+    var url = baseUrl + "getuniqueyears"
+    d3.json(url).then(callback)
+}
 
 /**
  * Construct query Http call
