@@ -34,7 +34,8 @@ getUniqYears(printYears)
 
 function printYears(data) {
     var years = data._items
-    yearsOptions = d3.select("#dateList").append("select").attr("id", "years")
+    yearsOptions = d3.select("#dateList").append("select").attr("id", "years").on('change',changeYear)
+    yearsOptions.append("option").attr("value", "interannual").text("Interannual")
     yearsOptions
         .selectAll("option")
         .data(years)
@@ -46,5 +47,4 @@ function printYears(data) {
         .text(function(d){
             return d._id;
         })
-    yearsOptions.append("option").attr("value", "interannual").text("interannual")
 }

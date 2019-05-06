@@ -43,6 +43,11 @@ function updateGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
     }
 }
 
+function changeYear() {
+    selectedYear = d3.select("#dateList").select('select').property('value')
+    console.log("Change year:" + selectedYear)
+}
+
 /**
  * Create empty graph
  */
