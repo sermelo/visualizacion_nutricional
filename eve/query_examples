@@ -4,4 +4,5 @@ curl -i -g http://localhost:5000/test2?where={\"Producto\":\"Normal\"}
 curl -i -g http://localhost:5000/test2?projection={\"Producto\":1}
 
 curl -i -G -g http://localhost:5000/test2 --data-urlencode 'where={"Producto":"Aceitunas","Región":"Andalucía"}' --data-urlencode 'projection={"Volumen (miles de kg)":1,"Año":1,"Mes":1}'
+curl -i -G -ghttp://localhost:5000/getuniqueyears --data-urlencode 'pretty'
 
