@@ -1,7 +1,7 @@
 PRODUCTS = [
     "Aceitunas",
-    "Huevos kg",
-    "Frutos secos, nueces",
+    "Huevos (kg)",
+    "Nueces",
 ]
 
 
