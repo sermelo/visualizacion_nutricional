@@ -29,7 +29,6 @@ productOptions
     })
 
 
-getUniqYears(printYears)
 
 function printYears(data) {
     var years = data._items
@@ -47,3 +46,23 @@ function printYears(data) {
             return d._id;
         })
 }
+
+function printRegions(data) {
+    var regions = data._items
+    regionsOptions = d3.select("#regionsList").append("select").attr("id", "years").on('change',changeRegion)
+    regionsOptions
+        .selectAll("option")
+        .data(regions)
+        .enter()
+        .append("option")
+        .attr("value", function(d){
+            return d._id;
+        })
+        .text(function(d){
+            return d._id;
+        })
+}
+
+getUniqYears(printYears)
+getUniqRegions(printRegions)
+

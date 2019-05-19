@@ -68,5 +68,17 @@ DOMAIN = {
                 ]
             }
         }
+    },
+
+    "getuniqueregions" :{
+        'datasource': {
+            'source': 'test3',
+            'aggregation' : {
+                'pipeline': [
+                    {"$group" : {"_id":"$Región", "count" : {"$sum" : 1}}}
+                ]
+            }
+        }
     }
+
 }

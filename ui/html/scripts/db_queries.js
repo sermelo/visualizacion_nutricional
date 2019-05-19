@@ -19,6 +19,11 @@ function getUniqYears(callback) {
     d3.json(url).then(callback)
 }
 
+function getUniqRegions(callback) {
+    var url = baseUrl + "getuniqueregions"
+    d3.json(url).then(callback)
+}
+
 /**
  * Construct query Http call
  * @param product The product to query

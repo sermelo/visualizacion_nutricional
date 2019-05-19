@@ -81,6 +81,12 @@ function changeYear() {
 }
 
 /**
+ * Update all data to new region. The region is extracted from the form
+ */
+function changeRegion() {
+}
+
+/**
  * Create basic structure fot the graph
  */
 function createBasicStructure() {
