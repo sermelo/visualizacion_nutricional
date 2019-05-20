@@ -4,39 +4,31 @@ var model = {
     "secondaryKey2": "Región",
 }
 
-PRODUCTS = [
-    "Aceitunas",
-    "Huevos (kg)",
-    "Nueces",
-]
-
-var productOptions = d3.select("#productDropdown")
-
-productOptions
-    .append("select")
-    .attr("id", "products")
-    .attr("multiple", "multiple")
-    .selectAll("option")
-    .data(PRODUCTS)
-    .enter()
-    .append("option")
-    .attr("value", function(d){
-        return d;
-    })
-    .text(function(d){
-        return d;
-    })
-    .on("dblclick", function(d){
-        updateGraph(this.value)
-    })
+function printProducts(data) {
+    var data = data._items
+    var options = d3.select("#Producto").append("select").attr("multiple", "multiple").on('change',changeOption)
+    options
+        .selectAll("option")
+        .data(data)
+        .enter()
+        .append("option")
+        .attr("value", function(d){
+            return d._id;
+        })
+        .text(function(d){
+            return d._id;
+        })
+        .on("dblclick", function(d){
+            updateGraph(this.value)
+        })
+}
 
 function printYears(data) {
-    var years = data._items
-    yearsOptions = d3.select("#Año").append("select").attr("id", "years").on('change',changeOption)
-    //yearsOptions.append("option").attr("value", "interannual").text("Interannual")
-    yearsOptions
+    var data = data._items
+    var options = d3.select("#Año").append("select").on('change',changeOption)
+    options
         .selectAll("option")
-        .data(years)
+        .data(data)
         .enter()
         .append("option")
         .attr("value", function(d){
@@ -48,11 +40,11 @@ function printYears(data) {
 }
 
 function printRegions(data) {
-    var regions = data._items
-    regionsOptions = d3.select("#Región").append("select").attr("id", "years").on('change',changeOption)
-    regionsOptions
+    var data = data._items
+    var options = d3.select("#Región").append("select").on('change',changeOption)
+    options
         .selectAll("option")
-        .data(regions)
+        .data(data)
         .enter()
         .append("option")
         .attr("value", function(d){
@@ -65,4 +57,5 @@ function printRegions(data) {
 
 getUniqYears(printYears)
 getUniqRegions(printRegions)
+getUniqProducts(printProducts)
 
