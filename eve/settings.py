@@ -72,7 +72,6 @@ DOMAIN = {
             }
         }
     },
-
     "getuniqueregions" :{
         'datasource': {
             'source': 'test3',
@@ -82,6 +81,15 @@ DOMAIN = {
                 ]
             }
         }
-    }
-
+    },
+    "getuniqueproducts" :{
+        'datasource': {
+            'source': 'test3',
+            'aggregation' : {
+                'pipeline': [
+                    {"$group" : {"_id":"$Producto", "count" : {"$sum" : 1}}}
+                ]
+            }
+        }
+    },
 }
