@@ -1,7 +1,6 @@
 var fieldsMap = { "volume": "Volumen (miles de kg)"}
 var graphDivId = "#polygon_graph"
 var field = ""
-var product = ""
 var region = ""
 var year = ""
 
@@ -13,53 +12,78 @@ var container, yAxisContainer, xAxisContainer
 
 var minYScale = 0
 var maxYScale = 0
-var paths = new Map();
+var productsData = new Map()
+
+var productsGraphs = new Map()
 
 /**
- * Construct query Http call
- * @param dataProduct The product to query
+ * Change the state and visualization of the product depending of the current state
+ *   view: falseo -> true
+ *   view: true -> false
+ * @param productName The product to query
  * @param dataRegion The region to query
- * @param dataYear The year to query
  * @param fieldSortName the desired field to query
  */
-function updateGraph(dataProduct, dataRegion, dataYear, fieldSortName) {
+function updateGraph(productName, dataRegion, fieldSortName) {
     field = fieldsMap[fieldSortName]
-    product = dataProduct
     region = dataRegion
-    year = dataYear
-    if (! paths.has(product)) {
-        console.log("Adding new product: " + product)
-        requestData(product, region, year, field, dataToGraph)
-    }
-    else if (! paths.get(product).get("view")) {
-        console.log("Activating an already requested product: " + product)
-        paths.get(product).set("view", true)
-        updateAllProducts()
+    if (productsGraphs.has(productName) && productsGraphs.get(productName).get("view")) {
+        removeProductGraph(productName)
     }
     else {
-        console.log("Deactivating a product: " + product)
-        paths.get(product).set("view", false)
+        addProductGraph(productName)
+    }
+}
+
+/**
+ * Add a product to the graph. If needed new data will be requested
+ * @param productName Name of the product to add
+ */ 
+function addProductGraph(productName) {
+    // If not data request it
+    if (! productsData.get(year).has(productName)) {
+        console.log("Adding " + productName + " " + year)
+        requestProductData(productName, region, year, field, dataToGraph)
+    }
+    else { // The data is already downloaded. Show it
+        console.log("Activating an already requested product: " + productName)
+        productsGraphs.get(productName).set("view", true)
         updateAllProducts()
     }
 }
 
 /**
- * Request a product data
- * @param product The product to query
- * @param region The region to query
- * @param year The year to query
- * @param field the desired field to query
- * @param callback method to execute with the data
+ * Remove a product
+ * @param productName Name of the product to remove
  */
-function requestData(product, region, year, field, callback) {
-    var url = getUrl(product, region, year, field)
-    d3.json(url).then(callback)
+function removeProductGraph(productName) {
+    console.log("Deactivating a product: " + productName)
+    productsGraphs.get(productName).set("view", false)
+    updateAllProducts()
 }
 
 /**
- * Create empty graph
+ * Update all data to new year. The year is extracted from the form
  */
-function createEmptyGraph() {
+function changeYear() {
+    year = d3.select("#dateList").select('select').property('value')
+    console.log("Change year:" + year)
+    if (! productsData.has(year)) {
+        productsData.set(year, new Map()) // Create new year data structure
+    }
+    productsGraphs.forEach(
+        function(product, productName) {
+            if (product.get("view")) {
+                addProductGraph(productName)
+            }
+        }
+    )
+}
+
+/**
+ * Create basic structure fot the graph
+ */
+function createBasicStructure() {
     container =
         d3.select(graphDivId)
         .append("svg")
@@ -77,22 +101,6 @@ function createEmptyGraph() {
 }
 
 /**
- * Construct query Http call
- * @param product The product to query
- * @param region The region to query
- * @param year The year to query
- * @param field the desired field to query
- * @return the Http get Url with the query
- */
-function getUrl(product, region, year, field) {
-    var baseUrl = 'http://localhost:5000/test3'
-    var filter = '{"Producto":"' + product + '","Región":"' + region + '","Año":' + year + '}'
-    var projection = '{"' + field + '":1,"Mes":1,"Producto":0,"Categoría":0}'
-    var dataUrl = encodeURI(baseUrl + '?max_results=300&where=' + filter + '&projection=' + projection);
-    return dataUrl
-}
-
-/**
  * Take the data and draw a polygon graph of a product if it doesn't exist
  * @param data Json format data to draw
  *     The data should have an "_items" elements with the data
@@ -100,33 +108,63 @@ function getUrl(product, region, year, field) {
  *     "field"(see fieldsMap variable) and the "mes"(month)
  */
 function dataToGraph(data) {
-    newProductValues = new Map([["data", data._items], ["container", container.append("path")], ["view", true]])
-    paths.set(product, newProductValues)
+    productName = data._items[0]["Producto"]
+    console.log("Received data from " + productName + " " + year)
+    productsData.get(year).set(productName, data._items)
+    if (productsGraphs.has(productName)) {
+        productsGraphs.get(productName).set("view", true)
+    }
+    else {
+        productsGraphs.set(productName, new Map([["container", container.append("path")], ["view", true]]))
+    }
     updateAllProducts()
 }
 
 /**
  * Add a new product path
- * @param data data to show
+ * @param productName name of the product to update
  */
-function addProductPath(product) {
-    var productPath = product.get("container")
-    var data = product.get("data")
+function updateProductGraph(productName) {
+    var productPath = productsGraphs.get(productName).get("container")
+    console.log("Analysing product " + productName)
+    
+    if (! productsGraphs.get(productName).get("view")) { // The poduct view is disable
+	console.log("Preparing to hide " + productName)
+        productPath.attr("visibility", "hidden")
+    }
+    else if (! productsData.get(year).has(productName)) { // The product view is enable but there is no data
+	console.log("Not available data for " + productName + " and year " + year)
+    }
+    else { // Starting visualizing the data
+        console.log("Preparing to draw " + productName)
+        var data = productsData.get(year).get(productName)
+        drawGraph(productPath, productsData.get(year).get(productName))
+    }
+}
+
+/**
+ * Draw a path graph
+ * @params pathContainer The container in which the graph needs to be drawn
+ * @params data Data of the graph
+ */
+function drawGraph(pathContainer, data) {
+    pathContainer.attr("visibility", "visible")
 
     var xScale = d3.scaleTime()
-       .domain([new Date(year, 0), new Date(year, 11)])
-       .range([margin.left, width]);
+        .domain([new Date(year, 0), new Date(year, 11)])
+        .range([margin.left, width]);
     xAxisContainer
-       .transition()
-       .duration(1000)
-       .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")))
+        .transition()
+        .duration(1000)
+        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")))
 
     var yScale = getYScale()
     yAxisContainer
-       .transition()
-       .duration(1000)
-       .call(d3.axisLeft(yScale))
-    productPath
+        .transition()
+        .duration(1000)
+        .call(d3.axisLeft(yScale))
+
+    pathContainer
         .datum(data)
         .transition()
         .duration(1000)
@@ -135,22 +173,17 @@ function addProductPath(product) {
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
             .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
-            .y(function(d) {
-                if (product.get("view")) {
-                    yValue = d[field]
-                } else {
-                    yValue = 0
-                }
-                return yScale(yValue)
-            })
+            .y(function(d) { return yScale(d[field]) })
         )
 }
 
 /**
- * Rescale product to current scale
+ * Upadate all products visualization. Useful to rescale all graphs
  */
 function updateAllProducts() {
-    paths.forEach(addProductPath)
+    productsGraphs.forEach(function(product, productName) {
+        updateProductGraph(productName)
+    })
 }
 
 /**
@@ -158,9 +191,9 @@ function updateAllProducts() {
  */
 function getYScale() {
     var newMaxY = 0
-    paths.forEach(function(product) {
-        var data = product.get("data")
-        if (product.get("view") && newMaxY < d3.max(data, d => d[field])) {
+    productsData.get(year).forEach(function(product, productName) {
+        var data = product
+        if (productsGraphs.get(productName).get("view") && newMaxY < d3.max(data, d => d[field])) {
             newMaxY = d3.max(data, d => d[field])
         }
     })
@@ -170,4 +203,4 @@ function getYScale() {
     return yScale
 }
 
-createEmptyGraph()
+createBasicStructure()
