@@ -37,9 +37,30 @@ function getUniqProducts(callback) {
  * @param field the desired field to query
  * @return the Http get Url with the query
  */
-function getUrl(product, year, region, field) {
+function getUrl(primaryKey, secondaryKey1, secondaryKey2, field) {
     var endpoint = baseUrl + "test3"
-    var filter = '{"Producto":"' + product + '","Región":"' + region + '","Año":' + year + '}'
+    var filter = "{"
+    Object.keys(model).forEach(function(key) {
+        filter += '"' + model[key] + '":'
+	if (key == "primaryKey") {
+            value = primaryKey
+	}
+        else if (key == "secondaryKey1") {
+            value = secondaryKey1
+	}
+        else {
+            value = secondaryKey2
+	}
+	if (model[key] == "Año") {
+	  filter += value
+	}
+	else {
+	  filter += '"' + value + '"'
+	}
+	filter += ","
+    })
+    filter = filter.substring(0, filter.length-1);
+    filter += "}"
     var projection = '{"Producto":1,"' + field + '":1,"Año":1,"Mes":1,"Región":1,"Categoría":0}'
     var dataUrl = encodeURI(endpoint + '?max_results=300&where=' + filter + '&projection=' + projection);
     return dataUrl
