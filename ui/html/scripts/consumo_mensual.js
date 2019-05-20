@@ -219,4 +219,11 @@ function getYear() {
     return parseInt(d3.select("#dateList").select('select').property('value'))
 }
 
+/**
+ * Return configured region
+ */
+function getRegion() {
+    return d3.select("#regionsList").select('select').property('value')
+}
+
 createBasicStructure()
