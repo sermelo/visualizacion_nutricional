@@ -31,18 +31,18 @@ function updateGraph(mainKey) {
 
 /**
  * Add a product to the graph. If needed new data will be requested
- * @param mainkey value
+ * @param primarykey value
  * @param secondaryKey1 secondary key 1 value
  * @param secondaryKey2 secondary key 2 value
  */ 
-function addProductGraph(mainKey, secondaryKey1, secondaryKey2) {
+function addProductGraph(primaryKey, secondaryKey1, secondaryKey2) {
     // If not data request it
-    if (! isThereData(mainKey, secondaryKey1, secondaryKey2)) {
-	console.log("Requesting: " + mainKey + " " + secondaryKey1 + " " + secondaryKey2)
-        requestProductData(mainKey, secondaryKey1, secondaryKey2, field, dataToGraph)
+    if (! isThereData(primaryKey, secondaryKey1, secondaryKey2)) {
+	console.log("Requesting: " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
+        requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, dataToGraph)
     }
     else { // The data is already downloaded. Show it
-        productsGraphs.get(mainKey).set("view", true)
+        productsGraphs.get(primaryKey).set("view", true)
         updateAllProducts()
     }
 }
