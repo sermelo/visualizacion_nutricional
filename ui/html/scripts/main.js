@@ -4,8 +4,6 @@ PRODUCTS = [
     "Nueces",
 ]
 
-
-var region = "Andalucía"
 var fieldSortName = "volume"
 
 var productOptions = d3.select("#productDropdown")
@@ -25,16 +23,13 @@ productOptions
         return d;
     })
     .on("dblclick", function(d){
-        updateGraph(this.value, region, fieldSortName)
+        updateGraph(this.value, fieldSortName)
     })
-
-
-getUniqYears(printYears)
 
 function printYears(data) {
     var years = data._items
-    yearsOptions = d3.select("#dateList").append("select").attr("id", "years").on('change',changeYear)
-    yearsOptions.append("option").attr("value", "interannual").text("Interannual")
+    yearsOptions = d3.select("#dateList").append("select").attr("id", "years").on('change',changeOption)
+    //yearsOptions.append("option").attr("value", "interannual").text("Interannual")
     yearsOptions
         .selectAll("option")
         .data(years)
@@ -47,3 +42,23 @@ function printYears(data) {
             return d._id;
         })
 }
+
+function printRegions(data) {
+    var regions = data._items
+    regionsOptions = d3.select("#regionsList").append("select").attr("id", "years").on('change',changeOption)
+    regionsOptions
+        .selectAll("option")
+        .data(regions)
+        .enter()
+        .append("option")
+        .attr("value", function(d){
+            return d._id;
+        })
+        .text(function(d){
+            return d._id;
+        })
+}
+
+getUniqYears(printYears)
+getUniqRegions(printRegions)
+
