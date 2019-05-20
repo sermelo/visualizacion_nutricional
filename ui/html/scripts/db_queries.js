@@ -24,6 +24,12 @@ function getUniqRegions(callback) {
     d3.json(url).then(callback)
 }
 
+function getUniqProducts(callback) {
+//    var url = baseUrl + "getuniqueproducts"
+    var url = "data/products.json"
+    d3.json(url).then(callback)
+}
+
 /**
  * Construct query Http call
  * @param product The product to query
