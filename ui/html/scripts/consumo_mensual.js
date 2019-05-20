@@ -2,7 +2,6 @@ var fieldsMap = { "volume": "Volumen (miles de kg)"}
 var graphDivId = "#polygon_graph"
 var field = ""
 var region = ""
-var year = ""
 
 var margin = {top: 0, right: 10, bottom: 30, left: 100}
 var width = 800 - margin.left - margin.right
@@ -31,17 +30,18 @@ function updateGraph(productName, dataRegion, fieldSortName) {
         removeProductGraph(productName)
     }
     else {
-        addProductGraph(productName)
+        addProductGraph(productName, getYear())
     }
 }
 
 /**
  * Add a product to the graph. If needed new data will be requested
  * @param productName Name of the product to add
+ * @param year year of which the data is wanted
  */ 
-function addProductGraph(productName) {
+function addProductGraph(productName, year) {
     // If not data request it
-    if (! productsData.get(year).has(productName)) {
+    if (! productsData.has(year) || ! productsData.get(year).has(productName)) {
         console.log("Adding " + productName + " " + year)
         requestProductData(productName, region, year, field, dataToGraph)
     }
@@ -66,15 +66,12 @@ function removeProductGraph(productName) {
  * Update all data to new year. The year is extracted from the form
  */
 function changeYear() {
-    year = d3.select("#dateList").select('select').property('value')
+    var year = getYear()
     console.log("Change year:" + year)
-    if (! productsData.has(year)) {
-        productsData.set(year, new Map()) // Create new year data structure
-    }
     productsGraphs.forEach(
         function(product, productName) {
             if (product.get("view")) {
-                addProductGraph(productName)
+                addProductGraph(productName, year)
             }
         }
     )
@@ -115,7 +112,11 @@ function createBasicStructure() {
  */
 function dataToGraph(data) {
     productName = data._items[0]["Producto"]
+    year = data._items[0]["Año"]
     console.log("Received data from " + productName + " " + year)
+    if (! productsData.has(year)) {
+        productsData.set(year, new Map())
+    }
     productsData.get(year).set(productName, data._items)
     if (productsGraphs.has(productName)) {
         productsGraphs.get(productName).set("view", true)
@@ -129,8 +130,9 @@ function dataToGraph(data) {
 /**
  * Add a new product path
  * @param productName name of the product to update
+ * @param year year of the data to show
  */
-function updateProductGraph(productName) {
+function updateProductGraph(productName, year) {
     var productPath = productsGraphs.get(productName).get("container")
     console.log("Analysing product " + productName)
     
@@ -154,6 +156,7 @@ function updateProductGraph(productName) {
  * @params data Data of the graph
  */
 function drawGraph(pathContainer, data) {
+    year = data[0]["Año"]
     pathContainer.attr("visibility", "visible")
 
     var xScale = d3.scaleTime()
@@ -161,7 +164,7 @@ function drawGraph(pathContainer, data) {
         .range([margin.left, width]);
     xAxisContainer
         .transition()
-        .duration(1000)
+        .duration(0)
         .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")))
 
     var yScale = getYScale()
@@ -188,7 +191,7 @@ function drawGraph(pathContainer, data) {
  */
 function updateAllProducts() {
     productsGraphs.forEach(function(product, productName) {
-        updateProductGraph(productName)
+        updateProductGraph(productName, getYear())
     })
 }
 
@@ -207,6 +210,13 @@ function getYScale() {
       .domain([0, newMaxY])
       .range([height, 0])
     return yScale
+}
+
+/**
+ * Return configured year
+ */
+function getYear() {
+    return parseInt(d3.select("#dateList").select('select').property('value'))
 }
 
 createBasicStructure()
