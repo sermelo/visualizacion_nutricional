@@ -9,8 +9,8 @@ var baseUrl = 'http://localhost:5000/'
  * @param field the desired field to query
  * @param callback method to execute with the data
  */
-function requestProductData(product, region, year, field, callback) {
-    var url = getUrl(product, region, year, field)
+function requestProductData(product, year, region, field, callback) {
+    var url = getUrl(product, year, region, field)
     d3.json(url).then(callback)
 }
 
@@ -32,7 +32,7 @@ function getUniqRegions(callback) {
  * @param field the desired field to query
  * @return the Http get Url with the query
  */
-function getUrl(product, region, year, field) {
+function getUrl(product, year, region, field) {
     var endpoint = baseUrl + "test3"
     var filter = '{"Producto":"' + product + '","Región":"' + region + '","Año":' + year + '}'
     var projection = '{"Producto":1,"' + field + '":1,"Año":1,"Mes":1,"Región":1,"Categoría":0}'
