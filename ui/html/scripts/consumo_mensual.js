@@ -53,11 +53,11 @@ function addProductGraph(primaryKey, secondaryKey1, secondaryKey2) {
  * @param region
  * @param productName
  */ 
-function isThereData(mainKey, year, region) {
+function isThereData(primaryKey, secondaryKey1, secondaryKey2) {
     var exist = true
-    if (! productsData.has(year) ||
-        ! productsData.get(year).has(region) ||
-        ! productsData.get(year).get(region).has(mainKey)) {
+    if (! productsData.has(secondaryKey1) ||
+        ! productsData.get(secondaryKey1).has(secondaryKey2) ||
+        ! productsData.get(secondaryKey1).get(secondaryKey2).has(primaryKey)) {
 	exist = false
     }
     return exist
@@ -119,11 +119,11 @@ function dataToGraph(data) {
     console.log(model["primaryKey"])
     console.log(data._items[0][model["primaryKey"]])
     primaryKey = data._items[0][model["primaryKey"]]
-    year = data._items[0]["Año"]
-    region = data._items[0]["Región"]
-    console.log("Received data " + primaryKey + " " + year + " " + region)
-    createDataScructure(year, region)
-    productsData.get(year).get(region).set(primaryKey, data._items)
+    secondaryKey1 = data._items[0][model["secondaryKey1"]]
+    secondaryKey2 = data._items[0][model["secondaryKey2"]]
+    console.log("Received data " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
+    createDataScructure(secondaryKey1, secondaryKey2)
+    productsData.get(secondaryKey1).get(secondaryKey2).set(primaryKey, data._items)
 
     if (productsGraphs.has(primaryKey)) {
         productsGraphs.get(primaryKey).set("view", true)
@@ -139,12 +139,12 @@ function dataToGraph(data) {
  * @param year
  * @param region
  */
-function createDataScructure(year, region) {
-    if (! productsData.has(year)) {
-        productsData.set(year, new Map())
+function createDataScructure(secondaryKey1, secondaryKey2) {
+    if (! productsData.has(secondaryKey1)) {
+        productsData.set(secondaryKey1, new Map())
     }
-    if (! productsData.get(year).has(region)) {
-        productsData.get(year).set(region, new Map())
+    if (! productsData.get(secondaryKey1).has(secondaryKey2)) {
+        productsData.get(secondaryKey1).set(secondaryKey2, new Map())
     }
 }
 
