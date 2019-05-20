@@ -15,12 +15,14 @@ function requestProductData(product, year, region, field, callback) {
 }
 
 function getUniqYears(callback) {
-    var url = baseUrl + "getuniqueyears"
+//    var url = baseUrl + "getuniqueyears"
+    var url = "data/years.json"
     d3.json(url).then(callback)
 }
 
 function getUniqRegions(callback) {
-    var url = baseUrl + "getuniqueregions"
+//    var url = baseUrl + "getuniqueregions"
+    var url = "data/regions.json"
     d3.json(url).then(callback)
 }
 
