@@ -4,8 +4,6 @@ PRODUCTS = [
     "Nueces",
 ]
 
-
-var region = "Andalucía"
 var fieldSortName = "volume"
 
 var productOptions = d3.select("#productDropdown")
@@ -25,14 +23,12 @@ productOptions
         return d;
     })
     .on("dblclick", function(d){
-        updateGraph(this.value, region, fieldSortName)
+        updateGraph(this.value, fieldSortName)
     })
-
-
 
 function printYears(data) {
     var years = data._items
-    yearsOptions = d3.select("#dateList").append("select").attr("id", "years").on('change',changeYear)
+    yearsOptions = d3.select("#dateList").append("select").attr("id", "years").on('change',changeOption)
     //yearsOptions.append("option").attr("value", "interannual").text("Interannual")
     yearsOptions
         .selectAll("option")
@@ -49,7 +45,7 @@ function printYears(data) {
 
 function printRegions(data) {
     var regions = data._items
-    regionsOptions = d3.select("#regionsList").append("select").attr("id", "years").on('change',changeRegion)
+    regionsOptions = d3.select("#regionsList").append("select").attr("id", "years").on('change',changeOption)
     regionsOptions
         .selectAll("option")
         .data(regions)

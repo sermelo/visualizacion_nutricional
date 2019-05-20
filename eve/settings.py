@@ -45,6 +45,9 @@ DOMAIN = {
             'Producto': {
                 'type': 'string'
             },
+            'Región': {
+                'type': 'string'
+            },
             'Categoría': {
                 'type': 'string'
             },

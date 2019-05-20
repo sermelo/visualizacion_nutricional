@@ -35,7 +35,7 @@ function getUniqRegions(callback) {
 function getUrl(product, region, year, field) {
     var endpoint = baseUrl + "test3"
     var filter = '{"Producto":"' + product + '","Región":"' + region + '","Año":' + year + '}'
-    var projection = '{"Producto":1,"' + field + '":1,"Año":1,"Mes":1,"Categoría":0}'
+    var projection = '{"Producto":1,"' + field + '":1,"Año":1,"Mes":1,"Región":1,"Categoría":0}'
     var dataUrl = encodeURI(endpoint + '?max_results=300&where=' + filter + '&projection=' + projection);
     return dataUrl
 }
