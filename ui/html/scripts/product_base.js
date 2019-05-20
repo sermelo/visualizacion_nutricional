@@ -13,10 +13,10 @@ function printProducts(data) {
         .enter()
         .append("option")
         .attr("value", function(d){
-            return d._id;
+            return d._id
         })
         .text(function(d){
-            return d._id;
+            return d._id
         })
         .on("dblclick", function(d){
             updateGraph(this.value)
@@ -32,10 +32,10 @@ function printYears(data) {
         .enter()
         .append("option")
         .attr("value", function(d){
-            return d._id;
+            return d._id
         })
         .text(function(d){
-            return d._id;
+            return d._id
         })
 }
 
@@ -48,10 +48,10 @@ function printRegions(data) {
         .enter()
         .append("option")
         .attr("value", function(d){
-            return d._id;
+            return d._id
         })
         .text(function(d){
-            return d._id;
+            return d._id
         })
 }
 
