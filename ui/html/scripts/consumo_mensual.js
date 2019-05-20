@@ -12,12 +12,6 @@ var minYScale = 0
 var maxYScale = 0
 var productsData = new Map()
 
-var model = {
-    "primaryKey": "Producto",
-    "secondaryKey1": "Año",
-    "secondaryKey2": "Región",
-}
-
 var productsGraphs = new Map()
 
 /**

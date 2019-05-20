@@ -1,3 +1,9 @@
+var model = {
+    "primaryKey": "Producto",
+    "secondaryKey1": "Año",
+    "secondaryKey2": "Región",
+}
+
 PRODUCTS = [
     "Aceitunas",
     "Huevos (kg)",
