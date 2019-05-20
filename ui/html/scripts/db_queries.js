@@ -41,7 +41,7 @@ function getUniqProducts(callback) {
  * @return the Http get Url with the query
  */
 function getUrl(primaryKey, secondaryKey1, secondaryKey2, field) {
-    var endpoint = baseUrl + "test3"
+/*    var endpoint = baseUrl + "test3"
     var filter = "{"
     Object.keys(model).forEach(function(key) {
         filter += '"' + model[key] + '":'
@@ -66,6 +66,30 @@ function getUrl(primaryKey, secondaryKey1, secondaryKey2, field) {
     filter += "}"
     var projection = '{"Producto":1,"' + field + '":1,"Año":1,"Mes":1,"Región":1,"Categoría":0}'
     var dataUrl = encodeURI(endpoint + '?max_results=300&where=' + filter + '&projection=' + projection);
-    return dataUrl
+   */
+    var product
+    var region
+    var year
+    Object.keys(model).forEach(function(key) {
+        if (key == "primaryKey") {
+                value = primaryKey
+        }
+            else if (key == "secondaryKey1") {
+                value = secondaryKey1
+        }
+            else {
+                value = secondaryKey2
+        }
+        if (model[key] == "Producto") {
+            product = value
+        }
+        else if (model[key] == "Región") {
+            region = value
+        }
+        else {
+            year = value
+        }
+    })
+    return "data/" + product + "_" + year + "_" + region + ".json"
 }
 
