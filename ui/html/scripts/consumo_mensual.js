@@ -162,7 +162,7 @@ function updateProductGraph(mainKey) {
         productPath.attr("visibility", "hidden")
     }
     else if (! isThereData(mainKey, secondaryKey1, secondaryKey2)) { // The product view is enable but there is no data
-	console.log("Not available data for " + mainKey + " and year " + year)
+	console.log("Not available data for " + mainKey + " " + secondaryKey1 + " " + secondaryKey2)
     }
     else { // Starting visualizing the data
         console.log("Preparing to draw " + mainKey)
