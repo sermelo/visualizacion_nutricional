@@ -17,14 +17,14 @@ var productsGraphs = new Map()
  * Change the state and visualization of the product depending of the current state
  *   view: falseo -> true
  *   view: true -> false
- * @param mainKey main key value
+ * @param primaryKey main key value
  */
-function updateGraph(mainKey) {
-    if (productsGraphs.has(mainKey) && productsGraphs.get(mainKey).get("view")) {
-        removeProductGraph(mainKey)
+function updateGraph(primaryKey) {
+    if (productsGraphs.has(primaryKey) && productsGraphs.get(primaryKey).get("view")) {
+        removeProductGraph(primaryKey)
     }
     else {
-        addProductGraph(mainKey, getSecondaryKey1(), getSecondaryKey2())
+        addProductGraph(primaryKey, getSecondaryKey1(), getSecondaryKey2())
     }
 }
 
@@ -66,8 +66,8 @@ function isThereData(primaryKey, secondaryKey1, secondaryKey2) {
  * Remove a product
  * @param productName Name of the product to remove
  */
-function removeProductGraph(mainKey) {
-    productsGraphs.get(mainKey).set("view", false)
+function removeProductGraph(primaryKey) {
+    productsGraphs.get(primaryKey).set("view", false)
     updateAllProducts()
 }
 
@@ -77,9 +77,9 @@ function removeProductGraph(mainKey) {
  */
 function changeOption() {
     productsGraphs.forEach(
-        function(container, mainKey) {
+        function(container, primaryKey) {
             if (container.get("view")) {
-                addProductGraph(mainKey, getSecondaryKey1(), getSecondaryKey2())
+                addProductGraph(primaryKey, getSecondaryKey1(), getSecondaryKey2())
             }
         }
     )
@@ -217,8 +217,8 @@ function drawGraph(primaryKey) {
  * Upadate all products visualization. Useful to rescale all graphs
  */
 function updateAllProducts() {
-    productsGraphs.forEach(function(container, mainKey) {
-        updateProductGraph(mainKey)
+    productsGraphs.forEach(function(container, primaryKey) {
+        updateProductGraph(primaryKey)
     })
 }
 
@@ -227,8 +227,8 @@ function updateAllProducts() {
  */
 function getYScale() {
     var newMaxY = 0
-    productsData.get(getSecondaryKey1()).get(getSecondaryKey2()).forEach(function(data, mainKey) {
-        if (productsGraphs.get(mainKey).get("view") && newMaxY < d3.max(data, d => d[field])) {
+    productsData.get(getSecondaryKey1()).get(getSecondaryKey2()).forEach(function(data, primaryKey) {
+        if (productsGraphs.get(primaryKey).get("view") && newMaxY < d3.max(data, d => d[field])) {
             newMaxY = d3.max(data, d => d[field])
         }
     })
