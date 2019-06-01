@@ -51,7 +51,7 @@ DOMAIN = {
             'Categoría': {
                 'type': 'string'
             },
-            "Volumen (miles de kg)" : {
+            "Masa" : {
                 "type": "float"
             },
             "Mes" : {

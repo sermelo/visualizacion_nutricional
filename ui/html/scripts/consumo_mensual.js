@@ -1,5 +1,4 @@
-var fieldsMap = { "volume": "Volumen (miles de kg)"}
-var field = fieldsMap["volume"]
+var field = "Masa"
 var graphDivId = "#polygon_graph"
 
 var margin = {top: 0, right: 10, bottom: 30, left: 100}
