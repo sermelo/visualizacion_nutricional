@@ -77,8 +77,8 @@ function removeProductGraph(primaryKey) {
  */
 function changeOption() {
     productsGraphs.forEach(
-        function(container, primaryKey) {
-            if (container.get("view")) {
+        function(graph, primaryKey) {
+            if (graph.get("view")) {
                 addProductGraph(primaryKey, getSecondaryKey1(), getSecondaryKey2())
             }
         }
@@ -113,14 +113,11 @@ function createBasicStructure() {
  *     "field"(see fieldsMap variable) and the "mes"(month)
  */
 function dataToGraph(data) {
-    console.log(data)
-    console.log(data._items[0])
-    console.log(model["primaryKey"])
-    console.log(data._items[0][model["primaryKey"]])
     primaryKey = data._items[0][model["primaryKey"]]
     secondaryKey1 = data._items[0][model["secondaryKey1"]]
     secondaryKey2 = data._items[0][model["secondaryKey2"]]
     console.log("Received data " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
+    console.log(data)
     createDataScructure(secondaryKey1, secondaryKey2)
     productsData.get(secondaryKey1).get(secondaryKey2).set(primaryKey, data._items)
 
@@ -128,7 +125,7 @@ function dataToGraph(data) {
         productsGraphs.get(primaryKey).set("view", true)
     }
     else {
-        productsGraphs.set(primaryKey, new Map([["container", container.append("path")], ["view", true]]))
+        productsGraphs.set(primaryKey, new Map([["path", container.append("path")], ["label", container.append("text")], ["view", true]]))
     }
     updateAllProducts()
 }
@@ -171,7 +168,7 @@ function updateProductGraph(primaryKey) {
  */
 function hideGraph(primaryKey) {
     console.log("Hidding " + primaryKey)
-    productsGraphs.get(primaryKey).get("container").attr("visibility", "hidden")
+    productsGraphs.get(primaryKey).get("path").attr("visibility", "hidden")
 }
 
 /**
@@ -180,10 +177,10 @@ function hideGraph(primaryKey) {
  */
 function drawGraph(primaryKey) {
     var data = productsData.get(getSecondaryKey1()).get(getSecondaryKey2()).get(primaryKey)
-    var pathContainer = productsGraphs.get(primaryKey).get("container")
+    var path = productsGraphs.get(primaryKey).get("path")
 
     console.log("Preparing to draw " + primaryKey)
-    pathContainer.attr("visibility", "visible")
+    path.attr("visibility", "visible")
     year = data[0]["Año"]
 
     var xScale = d3.scaleTime()
@@ -200,7 +197,7 @@ function drawGraph(primaryKey) {
         .duration(1000)
         .call(d3.axisLeft(yScale))
 
-    pathContainer
+    path
         .datum(data)
         .transition()
         .duration(1000)
@@ -217,7 +214,7 @@ function drawGraph(primaryKey) {
  * Upadate all products visualization. Useful to rescale all graphs
  */
 function updateAllProducts() {
-    productsGraphs.forEach(function(container, primaryKey) {
+    productsGraphs.forEach(function(graph, primaryKey) {
         updateProductGraph(primaryKey)
     })
 }
