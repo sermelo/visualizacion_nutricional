@@ -37,7 +37,7 @@ function updateGraph(primaryKey) {
 function addProductGraph(primaryKey, secondaryKey1, secondaryKey2) {
     // If not data request it
     if (! isThereData(primaryKey, secondaryKey1, secondaryKey2)) {
-	console.log("Requesting: " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
+        console.log("Requesting: " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
         requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, dataToGraph)
     }
     else { // The data is already downloaded. Show it
@@ -57,7 +57,7 @@ function isThereData(primaryKey, secondaryKey1, secondaryKey2) {
     if (! productsData.has(secondaryKey1) ||
         ! productsData.get(secondaryKey1).has(secondaryKey2) ||
         ! productsData.get(secondaryKey1).get(secondaryKey2).has(primaryKey)) {
-	exist = false
+        exist = false
     }
     return exist
 }
@@ -98,7 +98,7 @@ function createBasicStructure() {
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")")
     xAxisContainer = container.append("g")
-      .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + height + ")")
 
     yAxisContainer = container
         .append("g")
@@ -152,10 +152,10 @@ function updateProductGraph(primaryKey) {
     var secondaryKey1 = getSecondaryKey1()
     var secondaryKey2 = getSecondaryKey2()
     if (! productsGraphs.get(primaryKey).get("view")) { // The poduct view is disable
-	hideGraph(primaryKey)
+        hideGraph(primaryKey)
     }
     else if (! isThereData(primaryKey, secondaryKey1, secondaryKey2)) { // The product view is enable but there is no data
-	console.log("Not available data for " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
+        console.log("Not available data for " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
     }
     else { // Starting visualizing the data
         drawGraph(primaryKey)
@@ -268,7 +268,7 @@ function getSecondaryKey2() {
 function getOptionValue(keyName) {
     var optionValue = d3.select("#" + keyName).select('select').property('value')
     if (keyName == "Año") {
-	optionValue = parseInt(optionValue)
+        optionValue = parseInt(optionValue)
     }
     return optionValue
 }
