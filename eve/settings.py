@@ -51,7 +51,7 @@ DOMAIN = {
             'Categoría': {
                 'type': 'string'
             },
-            "Volumen (miles de kg)" : {
+            "Masa" : {
                 "type": "float"
             },
             "Mes" : {
@@ -67,21 +67,32 @@ DOMAIN = {
             'source': 'test3',
             'aggregation' : {
                 'pipeline': [
-                    {"$group" : {"_id":"$Año", "count" : {"$sum" : 1}}}
+                    {"$group" : {"_id":"$Año", "count" : {"$sum" : 1}}},
+                    {"$sort": {"_id":1}}
                 ]
             }
         }
     },
-
     "getuniqueregions" :{
         'datasource': {
             'source': 'test3',
             'aggregation' : {
                 'pipeline': [
-                    {"$group" : {"_id":"$Región", "count" : {"$sum" : 1}}}
+                    {"$group" : {"_id":"$Región", "count" : {"$sum" : 1}}},
+                    {"$sort": {"_id":1}}
                 ]
             }
         }
-    }
-
+    },
+    "getuniqueproducts" :{
+        'datasource': {
+            'source': 'test3',
+            'aggregation' : {
+                'pipeline': [
+                    {"$group" : {"_id":"$Producto", "count" : {"$sum" : 1}}},
+                    {"$sort": {"_id":1}}
+                ]
+            }
+        }
+    },
 }
