@@ -1,9 +1,9 @@
 var field = "Masa"
 var graphDivId = "#polygon_graph"
 
-var margin = {top: 0, right: 10, bottom: 30, left: 100}
-var width = 800 - margin.left - margin.right
-var height = 300 - margin.top - margin.bottom
+var margin = {top: 100, right: 300, bottom: 30, left: 100}
+var width = 1300 - margin.left - margin.right
+var height = 400 - margin.top - margin.bottom
 var graphDiv = d3.select(graphDivId)
 var container, yAxisContainer, xAxisContainer
 
@@ -169,6 +169,7 @@ function updateProductGraph(primaryKey) {
 function hideGraph(primaryKey) {
     console.log("Hidding " + primaryKey)
     productsGraphs.get(primaryKey).get("path").attr("visibility", "hidden")
+    productsGraphs.get(primaryKey).get("label").attr("visibility", "hidden")
 }
 
 /**
@@ -178,9 +179,12 @@ function hideGraph(primaryKey) {
 function drawGraph(primaryKey) {
     var data = productsData.get(getSecondaryKey1()).get(getSecondaryKey2()).get(primaryKey)
     var path = productsGraphs.get(primaryKey).get("path")
+    var label = productsGraphs.get(primaryKey).get("label")
+
 
     console.log("Preparing to draw " + primaryKey)
     path.attr("visibility", "visible")
+    label.attr("visibility", "visible")
     year = data[0]["Año"]
 
     var xScale = d3.scaleTime()
@@ -208,6 +212,9 @@ function drawGraph(primaryKey) {
             .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
             .y(function(d) { return yScale(d[field]) })
         )
+    label
+	.attr("transform", "translate(" + (width+3) + "," + yScale(data[data.length-1][field]) + ")")
+        .text(data[0][model["primaryKey"]])
 }
 
 /**
