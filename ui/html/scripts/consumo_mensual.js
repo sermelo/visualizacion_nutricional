@@ -125,7 +125,7 @@ function dataToGraph(data) {
         productsGraphs.get(primaryKey).set("view", true)
     }
     else {
-        productsGraphs.set(primaryKey, new Map([["path", container.append("path")], ["label", container.append("text")], ["view", true]]))
+        productsGraphs.set(primaryKey, new Map([["id", productsGraphs.size], ["path", container.append("path")], ["label", container.append("text")], ["view", true]]))
     }
     updateAllProducts()
 }
@@ -180,7 +180,7 @@ function drawGraph(primaryKey) {
     var data = productsData.get(getSecondaryKey1()).get(getSecondaryKey2()).get(primaryKey)
     var path = productsGraphs.get(primaryKey).get("path")
     var label = productsGraphs.get(primaryKey).get("label")
-
+    var color = d3.interpolateSinebow((productsGraphs.get(primaryKey).get("id")+1)/productsGraphs.size)
 
     console.log("Preparing to draw " + primaryKey)
     path.attr("visibility", "visible")
@@ -206,14 +206,18 @@ function drawGraph(primaryKey) {
         .transition()
         .duration(1000)
         .attr("fill", "none")
-        .attr("stroke", "#69b3a2")
+        .attr("stroke", color)
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
             .x(function(d) { return xScale(new Date(year, d.Mes-1)) })
             .y(function(d) { return yScale(d[field]) })
         )
+
     label
-	.attr("transform", "translate(" + (width+3) + "," + yScale(data[data.length-1][field]) + ")")
+        .transition()
+        .duration(1000)
+        .attr("transform", "translate(" + (width+3) + "," + yScale(data[data.length-1][field]) + ")")
+        .style('fill', color)
         .text(data[0][model["primaryKey"]])
 }
 
