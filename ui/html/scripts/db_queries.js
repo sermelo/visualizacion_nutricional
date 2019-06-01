@@ -25,7 +25,8 @@ function getUniqRegions(callback) {
 }
 
 function getUniqProducts(callback) {
-    var url = baseUrl + "getuniqueproducts"
+    // var url = baseUrl + "getuniqueproducts"
+    var url = "data/products.json"
     d3.json(url).then(callback)
 }
 
