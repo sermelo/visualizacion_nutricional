@@ -149,36 +149,42 @@ function createDataScructure(secondaryKey1, secondaryKey2) {
 
 /**
  * Add a new product path
- * @param productName name of the product to update
+ * @param primaryKey name of the graph to update
  */
-function updateProductGraph(mainKey) {
-    var productPath = productsGraphs.get(mainKey).get("container")
-    console.log("Analysing product " + mainKey)
+function updateProductGraph(primaryKey) {
     var secondaryKey1 = getSecondaryKey1()
     var secondaryKey2 = getSecondaryKey2()
-
-    if (! productsGraphs.get(mainKey).get("view")) { // The poduct view is disable
-	console.log("Preparing to hide " + mainKey)
-        productPath.attr("visibility", "hidden")
+    if (! productsGraphs.get(primaryKey).get("view")) { // The poduct view is disable
+	hideGraph(primaryKey)
     }
-    else if (! isThereData(mainKey, secondaryKey1, secondaryKey2)) { // The product view is enable but there is no data
-	console.log("Not available data for " + mainKey + " " + secondaryKey1 + " " + secondaryKey2)
+    else if (! isThereData(primaryKey, secondaryKey1, secondaryKey2)) { // The product view is enable but there is no data
+	console.log("Not available data for " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
     }
     else { // Starting visualizing the data
-        console.log("Preparing to draw " + mainKey)
-        var data = productsData.get(secondaryKey1).get(secondaryKey2).get(mainKey)
-        drawGraph(productPath, data)
+        drawGraph(primaryKey)
     }
 }
 
 /**
- * Draw a path graph
- * @params pathContainer The container in which the graph needs to be drawn
- * @params data Data of the graph
+ * Hide a graph
+ * @param primaryKey name of the graph to hide
  */
-function drawGraph(pathContainer, data) {
-    year = data[0]["Año"]
+function hideGraph(primaryKey) {
+    console.log("Hidding " + primaryKey)
+    productsGraphs.get(primaryKey).get("container").attr("visibility", "hidden")
+}
+
+/**
+ * Draw a path graph
+ * @param primaryKey name of the graph to hide
+ */
+function drawGraph(primaryKey) {
+    var data = productsData.get(getSecondaryKey1()).get(getSecondaryKey2()).get(primaryKey)
+    var pathContainer = productsGraphs.get(primaryKey).get("container")
+
+    console.log("Preparing to draw " + primaryKey)
     pathContainer.attr("visibility", "visible")
+    year = data[0]["Año"]
 
     var xScale = d3.scaleTime()
         .domain([new Date(year, 0), new Date(year, 11)])
