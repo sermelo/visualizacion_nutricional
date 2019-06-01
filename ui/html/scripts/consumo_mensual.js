@@ -232,17 +232,24 @@ function getYScale() {
     return yScale
 }
 
+/**
+ * Get value of secondary key 1
+ */ 
 function getSecondaryKey1() {
     return getOptionValue(model["secondaryKey1"])
 }
 
+/**
+ * Get value of secondary key 2
+ */ 
 function getSecondaryKey2() {
     console.log("Searching for: " + model["secondaryKey2"])
     return getOptionValue(model["secondaryKey2"])
 }
 
 /**
- * Return configured year
+ * Return value of option keyName from the form
+ * @param keyName Name of the form
  */
 function getOptionValue(keyName) {
     var optionValue = d3.select("#" + keyName).select('select').property('value')
