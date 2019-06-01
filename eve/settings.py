@@ -67,7 +67,8 @@ DOMAIN = {
             'source': 'test3',
             'aggregation' : {
                 'pipeline': [
-                    {"$group" : {"_id":"$Año", "count" : {"$sum" : 1}}}
+                    {"$group" : {"_id":"$Año", "count" : {"$sum" : 1}}},
+                    {"$sort": {"_id":1}}
                 ]
             }
         }
@@ -77,7 +78,8 @@ DOMAIN = {
             'source': 'test3',
             'aggregation' : {
                 'pipeline': [
-                    {"$group" : {"_id":"$Región", "count" : {"$sum" : 1}}}
+                    {"$group" : {"_id":"$Región", "count" : {"$sum" : 1}}},
+                    {"$sort": {"_id":1}}
                 ]
             }
         }
@@ -87,7 +89,8 @@ DOMAIN = {
             'source': 'test3',
             'aggregation' : {
                 'pipeline': [
-                    {"$group" : {"_id":"$Producto", "count" : {"$sum" : 1}}}
+                    {"$group" : {"_id":"$Producto", "count" : {"$sum" : 1}}},
+                    {"$sort": {"_id":1}}
                 ]
             }
         }
