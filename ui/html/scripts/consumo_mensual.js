@@ -48,9 +48,9 @@ function addProductGraph(primaryKey, secondaryKey1, secondaryKey2) {
 
 /**
  * Check if the data has been downloaded previously
- * @param year
- * @param region
- * @param productName
+ * @param primarykey value
+ * @param secondaryKey1 secondary key 1 value
+ * @param secondaryKey2 secondary key 2 value
  */ 
 function isThereData(primaryKey, secondaryKey1, secondaryKey2) {
     var exist = true
@@ -64,7 +64,7 @@ function isThereData(primaryKey, secondaryKey1, secondaryKey2) {
 
 /**
  * Remove a product
- * @param productName Name of the product to remove
+ * @param primarykey value
  */
 function removeProductGraph(primaryKey) {
     productsGraphs.get(primaryKey).set("view", false)
@@ -132,8 +132,8 @@ function dataToGraph(data) {
 
 /**
  * Ensure the product structure exits
- * @param year
- * @param region
+ * @param secondaryKey1 secondary key 1 value
+ * @param secondaryKey2 secondary key 2 value
  */
 function createDataScructure(secondaryKey1, secondaryKey2) {
     if (! productsData.has(secondaryKey1)) {
