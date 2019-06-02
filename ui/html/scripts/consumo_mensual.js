@@ -65,11 +65,14 @@ function changePrimaryOption(primaryKey) {
 function changeSecondaryOption() {
     productsGraphs.forEach(
         function(graph, primaryKey) {
-            if (graph.get("view")) {
-                updateGraph(primaryKey)
+            var secondaryKey1 = getSecondaryKey1()
+            var secondaryKey2 = getSecondaryKey2()
+            if (graph.get("view") && (! isThereData(primaryKey, secondaryKey1, secondaryKey2))) {
+                requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, processData)
             }
         }
     )
+    updateAllGraphs()
 }
 
 /**
@@ -85,7 +88,6 @@ function updateGraph(primaryKey) {
         updateAllGraphs()
     }
     else { // If not data request it
-        console.log("Requesting: " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
         requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, processData)
     }
 }
