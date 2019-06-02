@@ -55,7 +55,7 @@ function changePrimaryOption(primaryKey) {
         removeGraph(primaryKey)
     }
     else {
-        addGraph(primaryKey, getSecondaryKey1(), getSecondaryKey2())
+        updateGraph(primaryKey)
     }
 }
 
@@ -66,27 +66,27 @@ function changeSecondaryOption() {
     productsGraphs.forEach(
         function(graph, primaryKey) {
             if (graph.get("view")) {
-                addGraph(primaryKey, getSecondaryKey1(), getSecondaryKey2())
+                updateGraph(primaryKey)
             }
         }
     )
 }
 
 /**
- * Add a product to the graph. If needed new data will be requested
+ * Update primaryKey graph. If needed, request new data. All others graph will be scaled if needed
  * @param primarykey value
- * @param secondaryKey1 secondary key 1 value
- * @param secondaryKey2 secondary key 2 value
  */ 
-function addGraph(primaryKey, secondaryKey1, secondaryKey2) {
-    // If not data request it
-    if (! isThereData(primaryKey, secondaryKey1, secondaryKey2)) {
-        console.log("Requesting: " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
-        requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, dataToGraph)
-    }
-    else { // The data is already downloaded. Show it
+function updateGraph(primaryKey) {
+    var secondaryKey1 = getSecondaryKey1()
+    var secondaryKey2 = getSecondaryKey2()
+    // The data is already downloaded. Show it
+    if (isThereData(primaryKey, secondaryKey1, secondaryKey2)) {
         productsGraphs.get(primaryKey).set("view", true)
         updateAllProducts()
+    }
+    else { // If not data request it
+        console.log("Requesting: " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
+        requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, dataToGraph)
     }
 }
 
