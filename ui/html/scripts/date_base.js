@@ -19,7 +19,7 @@ function printDates(data) {
             return d._id
         })
         .on("dblclick", function(d){
-            updateGraph(parseInt(this.value))
+            changePrimaryOption(parseInt(this.value))
         })
 }
 

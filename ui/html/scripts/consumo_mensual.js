@@ -11,18 +11,65 @@ var productsData = new Map()
 var productsGraphs = new Map()
 
 /**
+ * Create Map with all graph
+ * Each element of the map contain an id, a path and a label
+ */
+function createGraphMap() {
+    d3.select("#" + model["primaryKey"]).select("select").selectAll("option").each(
+        function(value) {
+            console.log(value["_id"])
+            productsGraphs.set(value["_id"], new Map([["id", productsGraphs.size], ["path", container.append("path")], ["label", container.append("text")], ["view", false]]))
+        }
+    )
+}
+
+/**
+ * Create basic structure fot the graph
+ */
+function createBasicStructure() {
+    var graphDiv = d3.select(graphDivId)
+    container =
+        d3.select(graphDivId)
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")")
+    xAxisContainer = container.append("g")
+        .attr("transform", "translate(0," + height + ")")
+
+    yAxisContainer = container
+        .append("g")
+        .attr("transform", "translate(" + (margin.left) + ", 0)")
+}
+
+/**
  * Change the state and visualization of the product depending of the current state
  *   view: falseo -> true
  *   view: true -> false
  * @param primaryKey main key value
  */
-function updateGraph(primaryKey) {
+function changePrimaryOption(primaryKey) {
     if (productsGraphs.has(primaryKey) && productsGraphs.get(primaryKey).get("view")) {
         removeProductGraph(primaryKey)
     }
     else {
         addProductGraph(primaryKey, getSecondaryKey1(), getSecondaryKey2())
     }
+}
+
+/**
+ * Update data to acomodate new secondaryKey
+ */
+function changeSecondaryOption() {
+    productsGraphs.forEach(
+        function(graph, primaryKey) {
+            if (graph.get("view")) {
+                addProductGraph(primaryKey, getSecondaryKey1(), getSecondaryKey2())
+            }
+        }
+    )
 }
 
 /**
@@ -66,40 +113,6 @@ function isThereData(primaryKey, secondaryKey1, secondaryKey2) {
 function removeProductGraph(primaryKey) {
     productsGraphs.get(primaryKey).set("view", false)
     updateAllProducts()
-}
-
-/**
- * Update data to acomodate new secondaryKey
- */
-function changeSecondaryOption() {
-    productsGraphs.forEach(
-        function(graph, primaryKey) {
-            if (graph.get("view")) {
-                addProductGraph(primaryKey, getSecondaryKey1(), getSecondaryKey2())
-            }
-        }
-    )
-}
-
-/**
- * Create basic structure fot the graph
- */
-function createBasicStructure() {
-    var graphDiv = d3.select(graphDivId)
-    container =
-        d3.select(graphDivId)
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform",
-              "translate(" + margin.left + "," + margin.top + ")")
-    xAxisContainer = container.append("g")
-        .attr("transform", "translate(0," + height + ")")
-
-    yAxisContainer = container
-        .append("g")
-        .attr("transform", "translate(" + (margin.left) + ", 0)")
 }
 
 /**
@@ -269,17 +282,6 @@ function getOptionValue(keyName) {
     return optionValue
 }
 
-/**
- * Create Map with all graph
- * Each element of the map contain an id, a path and a label
- */
-function createGraphMap() {
-    d3.select("#" + model["primaryKey"]).select("select").selectAll("option").each(
-        function(value) {
-	    console.log(value["_id"])
-	    productsGraphs.set(value["_id"], new Map([["id", productsGraphs.size], ["path", container.append("path")], ["label", container.append("text")], ["view", false]]))
-	}
-    )
-}
+
 
 createBasicStructure()
