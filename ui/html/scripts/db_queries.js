@@ -3,14 +3,15 @@ var baseUrl = 'http://localhost:5000/'
 
 /**
  * Request a product data
- * @param product The product to query
- * @param region The region to query
- * @param year The year to query
+ * @param primaryKey The primaryKey value
+ * @param secondaryKey1 The secondaryKey1 value
+ * @param secondaryKey2 The secondaryKey2 value
  * @param field the desired field to query
  * @param callback method to execute with the data
  */
-function requestProductData(product, year, region, field, callback) {
-    var url = getUrl(product, year, region, field)
+function requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, callback) {
+    console.log("Requesting: " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
+    var url = getUrl(primaryKey, secondaryKey1, secondaryKey2, field)
     d3.json(url).then(callback)
 }
 
@@ -32,9 +33,9 @@ function getUniqProducts(callback) {
 
 /**
  * Construct query Http call
- * @param product The product to query
- * @param region The region to query
- * @param year The year to query
+ * @param primaryKey The primaryKey value
+ * @param secondaryKey1 The secondaryKey1 value
+ * @param secondaryKey2 The secondaryKey2 value
  * @param field the desired field to query
  * @return the Http get Url with the query
  */
