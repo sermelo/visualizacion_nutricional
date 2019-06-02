@@ -10,7 +10,7 @@ var baseUrl = 'http://localhost:5000/'
  */
 function requestProductData(primaryKey, secondaryKey1, secondaryKey2, callback) {
     console.log("Requesting: " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
-    var url = getUrl(primaryKey, secondaryKey1, secondaryKey2, field)
+    var url = getUrl(primaryKey, secondaryKey1, secondaryKey2)
     d3.json(url).then(callback)
 }
 
@@ -54,10 +54,9 @@ function getUniqFields(callback) {
  * @param primaryKey The primaryKey value
  * @param secondaryKey1 The secondaryKey1 value
  * @param secondaryKey2 The secondaryKey2 value
- * @param field the desired field to query
  * @return the Http get Url with the query
  */
-function getUrl(primaryKey, secondaryKey1, secondaryKey2, field) {
+function getUrl(primaryKey, secondaryKey1, secondaryKey2) {
     var endpoint = baseUrl + "test3"
     var filter = "{"
     Object.keys(model).forEach(function(key) {
