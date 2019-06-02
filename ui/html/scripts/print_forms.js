@@ -13,7 +13,11 @@ function printPrimary(data) {
             return d._id
         })
         .on("dblclick", function(d){
-            changePrimaryOption(this.value)
+            var selected = this.value
+            if (! isNaN(this.value)) {
+                selected = parseInt(selected)
+            }
+            changePrimaryOption(selected)
         })
 }
 
