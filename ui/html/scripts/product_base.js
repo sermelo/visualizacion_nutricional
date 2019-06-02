@@ -6,7 +6,7 @@ var model = {
 
 function printProducts(data) {
     var data = data._items
-    var options = d3.select("#Producto").append("select").attr("multiple", "multiple").on('change',changeSecondaryOption)
+    var options = d3.select("#Producto").append("select").attr("multiple", "multiple")
     options
         .selectAll("option")
         .data(data)

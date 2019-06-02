@@ -6,7 +6,7 @@ var model = {
 
 function printRegions(data) {
     var data = data._items
-    var options = d3.select("#Región").append("select").attr("multiple", "multiple").on('change',changeSecondaryOption)
+    var options = d3.select("#Región").append("select").attr("multiple", "multiple")
     options
         .selectAll("option")
         .data(data)
