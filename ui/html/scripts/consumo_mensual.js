@@ -52,7 +52,7 @@ function createBasicStructure() {
  */
 function changePrimaryOption(primaryKey) {
     if (productsGraphs.has(primaryKey) && productsGraphs.get(primaryKey).get("view")) {
-        removeProductGraph(primaryKey)
+        removeGraph(primaryKey)
     }
     else {
         addProductGraph(primaryKey, getSecondaryKey1(), getSecondaryKey2())
@@ -110,7 +110,7 @@ function isThereData(primaryKey, secondaryKey1, secondaryKey2) {
  * Remove a product
  * @param primarykey value
  */
-function removeProductGraph(primaryKey) {
+function removeGraph(primaryKey) {
     productsGraphs.get(primaryKey).set("view", false)
     updateAllProducts()
 }
