@@ -86,7 +86,7 @@ function updateGraph(primaryKey) {
     }
     else { // If not data request it
         console.log("Requesting: " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
-        requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, dataToGraph)
+        requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, processData)
     }
 }
 
@@ -122,35 +122,32 @@ function removeGraph(primaryKey) {
  *     Each element in "_items" should contain at least the
  *     "field"(see fieldsMap variable) and the "mes"(month)
  */
-function dataToGraph(data) {
+function processData(data) {
     primaryKey = data._items[0][model["primaryKey"]]
-    secondaryKey1 = data._items[0][model["secondaryKey1"]]
-    secondaryKey2 = data._items[0][model["secondaryKey2"]]
-    console.log("Received data " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
-    console.log(data)
-    createDataScructure(secondaryKey1, secondaryKey2)
-    productsData.get(secondaryKey1).get(secondaryKey2).set(primaryKey, data._items)
-
-    if (! productsGraphs.has(primaryKey)) {
+    console.log("Received data of " + primaryKey)
+    if (! productsGraphs.has(primaryKey)) { // This will be done only first time data is requested
         createGraphMap()
     }
-
+    storeData(data)
     productsGraphs.get(primaryKey).set("view", true)
     updateAllProducts()
 }
 
 /**
  * Ensure the product structure exits
- * @param secondaryKey1 secondary key 1 value
- * @param secondaryKey2 secondary key 2 value
+ * @param data information to store in productsData
  */
-function createDataScructure(secondaryKey1, secondaryKey2) {
+function storeData(data) {
+    primaryKey = data._items[0][model["primaryKey"]]
+    secondaryKey1 = data._items[0][model["secondaryKey1"]]
+    secondaryKey2 = data._items[0][model["secondaryKey2"]]
     if (! productsData.has(secondaryKey1)) {
         productsData.set(secondaryKey1, new Map())
     }
     if (! productsData.get(secondaryKey1).has(secondaryKey2)) {
         productsData.get(secondaryKey1).set(secondaryKey2, new Map())
     }
+    productsData.get(secondaryKey1).get(secondaryKey2).set(primaryKey, data._items)
 }
 
 /**
