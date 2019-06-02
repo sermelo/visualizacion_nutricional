@@ -44,22 +44,22 @@ function getUrl(primaryKey, secondaryKey1, secondaryKey2, field) {
     var filter = "{"
     Object.keys(model).forEach(function(key) {
         filter += '"' + model[key] + '":'
-	if (key == "primaryKey") {
+        if (key == "primaryKey") {
             value = primaryKey
-	}
+        }
         else if (key == "secondaryKey1") {
             value = secondaryKey1
-	}
+        }
         else {
             value = secondaryKey2
-	}
-	if (model[key] == "Año") {
-	  filter += value
-	}
-	else {
-	  filter += '"' + value + '"'
-	}
-	filter += ","
+        }
+        if (model[key] == "Año") {
+            filter += value
+        }
+        else {
+            filter += '"' + value + '"'
+        }
+        filter += ","
     })
     filter = filter.substring(0, filter.length-1);
     filter += "}"
