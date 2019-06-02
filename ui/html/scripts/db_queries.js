@@ -15,6 +15,18 @@ function requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, cal
     d3.json(url).then(callback)
 }
 
+function getUniqValues(key, callback) {
+    if (key == "Año") {
+        getUniqYears(callback)
+    }
+    else if (key == "Región") {
+        getUniqRegions(callback)
+    }
+    else {
+        getUniqProducts(callback)
+    }
+}
+
 function getUniqYears(callback) {
     var url = baseUrl + "getuniqueyears"
     d3.json(url).then(callback)
@@ -26,7 +38,6 @@ function getUniqRegions(callback) {
 }
 
 function getUniqProducts(callback) {
-    // var url = baseUrl + "getuniqueproducts"
     var url = "data/products.json"
     d3.json(url).then(callback)
 }
