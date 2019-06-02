@@ -6,7 +6,7 @@ var model = {
 
 function printProducts(data) {
     var data = data._items
-    var options = d3.select("#Producto").append("select").attr("multiple", "multiple").on('change',changeOption)
+    var options = d3.select("#Producto").append("select").attr("multiple", "multiple").on('change',changeSecondaryOption)
     options
         .selectAll("option")
         .data(data)
@@ -25,7 +25,7 @@ function printProducts(data) {
 
 function printYears(data) {
     var data = data._items
-    var options = d3.select("#Año").append("select").on('change',changeOption)
+    var options = d3.select("#Año").append("select").on('change',changeSecondaryOption)
     options
         .selectAll("option")
         .data(data)
@@ -41,7 +41,7 @@ function printYears(data) {
 
 function printRegions(data) {
     var data = data._items
-    var options = d3.select("#Región").append("select").on('change',changeOption)
+    var options = d3.select("#Región").append("select").on('change',changeSecondaryOption)
     options
         .selectAll("option")
         .data(data)

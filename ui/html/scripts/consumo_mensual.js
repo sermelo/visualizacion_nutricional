@@ -69,10 +69,9 @@ function removeProductGraph(primaryKey) {
 }
 
 /**
- * Update all data to new year or region.
- * The year or region  is extracted from the form
+ * Update data to acomodate new secondaryKey
  */
-function changeOption() {
+function changeSecondaryOption() {
     productsGraphs.forEach(
         function(graph, primaryKey) {
             if (graph.get("view")) {
