@@ -121,12 +121,11 @@ function dataToGraph(data) {
     createDataScructure(secondaryKey1, secondaryKey2)
     productsData.get(secondaryKey1).get(secondaryKey2).set(primaryKey, data._items)
 
-    if (productsGraphs.has(primaryKey)) {
-        productsGraphs.get(primaryKey).set("view", true)
+    if (! productsGraphs.has(primaryKey)) {
+        createGraphMap()
     }
-    else {
-        productsGraphs.set(primaryKey, new Map([["id", productsGraphs.size], ["path", container.append("path")], ["label", container.append("text")], ["view", true]]))
-    }
+
+    productsGraphs.get(primaryKey).set("view", true)
     updateAllProducts()
 }
 
@@ -271,6 +270,19 @@ function getOptionValue(keyName) {
         optionValue = parseInt(optionValue)
     }
     return optionValue
+}
+
+/**
+ * Create Map with all graph
+ * Each element of the map contain an id, a path and a label
+ */
+function createGraphMap() {
+    d3.select("#" + model["primaryKey"]).select("select").selectAll("option").each(
+        function(value) {
+	    console.log(value["_id"])
+	    productsGraphs.set(value["_id"], new Map([["id", productsGraphs.size], ["path", container.append("path")], ["label", container.append("text")], ["view", false]]))
+	}
+    )
 }
 
 createBasicStructure()
