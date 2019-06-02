@@ -64,7 +64,8 @@ function getUrl(primaryKey, secondaryKey1, secondaryKey2, field) {
     filter = filter.substring(0, filter.length-1);
     filter += "}"
     var projection = '{"Producto":1,"' + field + '":1,"Año":1,"Mes":1,"Región":1,"Categoría":0}'
-    var dataUrl = encodeURI(endpoint + '?max_results=300&where=' + filter + '&projection=' + projection);
+    var sort = '[("Mes",1)]'
+    var dataUrl = encodeURI(endpoint + "?max_results=300&where=" + filter + "&projection=" + projection + "&sort=" + sort)
     return dataUrl
 }
 
