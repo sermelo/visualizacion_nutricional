@@ -4,13 +4,10 @@ var graphDivId = "#polygon_graph"
 var margin = {top: 100, right: 300, bottom: 30, left: 100}
 var width = 1300 - margin.left - margin.right
 var height = 400 - margin.top - margin.bottom
-var graphDiv = d3.select(graphDivId)
+
 var container, yAxisContainer, xAxisContainer
 
-var minYScale = 0
-var maxYScale = 0
 var productsData = new Map()
-
 var productsGraphs = new Map()
 
 /**
@@ -89,6 +86,7 @@ function changeOption() {
  * Create basic structure fot the graph
  */
 function createBasicStructure() {
+    var graphDiv = d3.select(graphDivId)
     container =
         d3.select(graphDivId)
         .append("svg")
