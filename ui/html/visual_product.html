@@ -6,10 +6,17 @@
         <div id="Año"></div>
         <div id="Región"></div>
         <div id="Producto"></div>
-	<div id="polygon_graph"></div>
+        <div id="polygon_graph"></div>
+        <script>
+            var model = {
+                "primaryKey": "Productor",
+                "secondaryKey1": "Año",
+                "secondaryKey2": "Región",
+            }
+        </script>
         <script src="https://d3js.org/d3.v5.min.js"></script>
-	<script src="scripts/db_queries.js"></script>
-	<script src="scripts/product_base.js"></script>
-	<script src="scripts/graph_drawer.js"></script>
+	    <script src="scripts/db_queries.js"></script>
+        <script src="scripts/print_forms.js"></script>
+       	<script src="scripts/graph_drawer.js"></script>
 	</body>
 </html>
