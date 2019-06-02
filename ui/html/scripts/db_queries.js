@@ -22,8 +22,11 @@ function getUniqValues(key, callback) {
     else if (key == "Región") {
         getUniqRegions(callback)
     }
-    else {
+    else if (key == "Producto") {
         getUniqProducts(callback)
+    }
+    else {
+        getUniqFields(callback)
     }
 }
 
@@ -39,6 +42,11 @@ function getUniqRegions(callback) {
 
 function getUniqProducts(callback) {
     var url = "data/products.json"
+    d3.json(url).then(callback)
+}
+
+function getUniqFields(callback) {
+    var url = "data/fields.json"
     d3.json(url).then(callback)
 }
 
