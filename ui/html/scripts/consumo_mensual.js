@@ -82,7 +82,7 @@ function updateGraph(primaryKey) {
     // The data is already downloaded. Show it
     if (isThereData(primaryKey, secondaryKey1, secondaryKey2)) {
         productsGraphs.get(primaryKey).set("view", true)
-        updateAllProducts()
+        updateAllGraphs()
     }
     else { // If not data request it
         console.log("Requesting: " + primaryKey + " " + secondaryKey1 + " " + secondaryKey2)
@@ -112,7 +112,7 @@ function isThereData(primaryKey, secondaryKey1, secondaryKey2) {
  */
 function removeGraph(primaryKey) {
     productsGraphs.get(primaryKey).set("view", false)
-    updateAllProducts()
+    updateAllGraphs()
 }
 
 /**
@@ -130,7 +130,7 @@ function processData(data) {
     }
     storeData(data)
     productsGraphs.get(primaryKey).set("view", true)
-    updateAllProducts()
+    updateAllGraphs()
 }
 
 /**
@@ -154,7 +154,7 @@ function storeData(data) {
 /**
  * Upadate all products visualization. Useful to rescale all graphs
  */
-function updateAllProducts() {
+function updateAllGraphs() {
     productsGraphs.forEach(function(graph, primaryKey) {
         updateProductGraph(primaryKey)
     })
