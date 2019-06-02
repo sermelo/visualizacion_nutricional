@@ -150,6 +150,16 @@ function storeData(data) {
     productsData.get(secondaryKey1).get(secondaryKey2).set(primaryKey, data._items)
 }
 
+
+/**
+ * Upadate all products visualization. Useful to rescale all graphs
+ */
+function updateAllProducts() {
+    productsGraphs.forEach(function(graph, primaryKey) {
+        updateProductGraph(primaryKey)
+    })
+}
+
 /**
  * Add a new product path
  * @param primaryKey name of the graph to update
@@ -228,15 +238,6 @@ function drawGraph(primaryKey) {
 }
 
 /**
- * Upadate all products visualization. Useful to rescale all graphs
- */
-function updateAllProducts() {
-    productsGraphs.forEach(function(graph, primaryKey) {
-        updateProductGraph(primaryKey)
-    })
-}
-
-/**
  * Return the Y scale based in the current data
  */
 function getYScale() {
@@ -279,6 +280,5 @@ function getOptionValue(keyName) {
     return optionValue
 }
 
-
-
 createBasicStructure()
+
