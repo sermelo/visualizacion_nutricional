@@ -29,6 +29,10 @@ function printSecondary2(data) {
     printSecondary(data, model["secondaryKey2"])
 }
 
+function printFields(data) {
+    printSecondary(data, "field")
+}
+
 function printSecondary(data, name) {
     var data = data._items
     var options = d3.select("#" + name).append("select").on('change',changeSecondaryOption)
@@ -48,4 +52,5 @@ function printSecondary(data, name) {
 getUniqValues(model["primaryKey"], printPrimary)
 getUniqValues(model["secondaryKey1"], printSecondary1)
 getUniqValues(model["secondaryKey2"], printSecondary2)
+getUniqValues("fields", printFields)
 
