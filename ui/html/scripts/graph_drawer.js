@@ -1,4 +1,3 @@
-var field = "Masa"
 var graphDivId = "#polygon_graph"
 
 var margin = {top: 100, right: 300, bottom: 30, left: 100}
@@ -68,7 +67,7 @@ function changeSecondaryOption() {
             var secondaryKey1 = getSecondaryKey1()
             var secondaryKey2 = getSecondaryKey2()
             if (graph.get("view") && (! isThereData(primaryKey, secondaryKey1, secondaryKey2))) {
-                requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, processData)
+                requestProductData(primaryKey, secondaryKey1, secondaryKey2, processData)
             }
         }
     )
@@ -88,7 +87,7 @@ function updateGraph(primaryKey) {
         updateAllGraphs()
     }
     else { // If not data request it
-        requestProductData(primaryKey, secondaryKey1, secondaryKey2, field, processData)
+        requestProductData(primaryKey, secondaryKey1, secondaryKey2, processData)
     }
 }
 
@@ -199,6 +198,7 @@ function drawGraph(primaryKey) {
     var path = productsGraphs.get(primaryKey).get("path")
     var label = productsGraphs.get(primaryKey).get("label")
     var color = d3.interpolateSinebow((productsGraphs.get(primaryKey).get("id")+1)/productsGraphs.size)
+    var field = getField()
 
     console.log("Preparing to draw " + primaryKey)
     path.attr("visibility", "visible")
@@ -244,6 +244,7 @@ function drawGraph(primaryKey) {
  */
 function getYScale() {
     var newMaxY = 0
+    var field = getField()
     productsData.get(getSecondaryKey1()).get(getSecondaryKey2()).forEach(function(data, primaryKey) {
         if (productsGraphs.get(primaryKey).get("view") && newMaxY < d3.max(data, d => d[field])) {
             newMaxY = d3.max(data, d => d[field])
@@ -268,6 +269,13 @@ function getSecondaryKey1() {
 function getSecondaryKey2() {
     console.log("Searching for: " + model["secondaryKey2"])
     return getOptionValue(model["secondaryKey2"])
+}
+
+/**
+ * Get value of selected field
+ */
+function getField() {
+    return getOptionValue("field")
 }
 
 /**

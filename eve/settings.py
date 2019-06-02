@@ -51,7 +51,16 @@ DOMAIN = {
             'Categoría': {
                 'type': 'string'
             },
-            "Masa" : {
+            "Precio medio kg" : {
+                "type": "float"
+            },
+            "Consumo per capita" : {
+                "type": "float"
+            },
+            "Gasto per capita" : {
+                "type": "float"
+            },
+            "Penetración (%)" : {
                 "type": "float"
             },
             "Mes" : {
